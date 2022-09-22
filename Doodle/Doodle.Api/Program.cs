@@ -20,7 +20,7 @@ builder.Services.AddEndpointsApiExplorer()
     .AddSwaggerGen()
     .AddDbContext<DoodleDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Doodle")))
     .AddRepositoryInfrastructure()
-    .AddServices(builder.Configuration)
+    .AddServices()
     .AddCors();
 
 var app = builder.Build();

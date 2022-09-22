@@ -13,6 +13,6 @@ namespace Doodle.Services.Extensions;
 
 public static class IoCServices
 {
-    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration) =>
+    public static IServiceCollection AddServices(this IServiceCollection services) =>
         services.AddScoped<IUsersService, UsersService>();
 }

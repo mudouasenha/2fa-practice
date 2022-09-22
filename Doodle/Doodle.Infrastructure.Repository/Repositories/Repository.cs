@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Doodle.Infrastructure.Repository.Repositories
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
     {
         protected readonly DoodleDbContext dbContext;
         protected readonly DbSet<TEntity> dbSet;
