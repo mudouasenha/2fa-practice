@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32505.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Api", "Doodle.Api\Doodle.Api.csproj", "{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0} = {6E241373-94BF-4D71-AF36-9EAF2F49EDF0}
+		{BF5FCC52-716B-4187-9932-12F3C160B324} = {BF5FCC52-716B-4187-9932-12F3C160B324}
+		{C79CCCB7-18EB-420D-9A8A-244981435882} = {C79CCCB7-18EB-420D-9A8A-244981435882}
+		{FCD45BE5-F170-441A-BD07-7EC71D689A6A} = {FCD45BE5-F170-441A-BD07-7EC71D689A6A}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Services", "Doodle.Services\Doodle.Services.csproj", "{BF5FCC52-716B-4187-9932-12F3C160B324}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Domain", "Doodle.Domain\Doodle.Domain.csproj", "{C79CCCB7-18EB-420D-9A8A-244981435882}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Infrastructure.Security", "Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj", "{FCD45BE5-F170-441A-BD07-7EC71D689A6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Infrastructure.Repository", "Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj", "{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF5FCC52-716B-4187-9932-12F3C160B324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF5FCC52-716B-4187-9932-12F3C160B324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF5FCC52-716B-4187-9932-12F3C160B324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF5FCC52-716B-4187-9932-12F3C160B324}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C79CCCB7-18EB-420D-9A8A-244981435882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C79CCCB7-18EB-420D-9A8A-244981435882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C79CCCB7-18EB-420D-9A8A-244981435882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C79CCCB7-18EB-420D-9A8A-244981435882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1757F602-FEC3-4FC4-BAA2-9D05683BA087}
+	EndGlobalSection
+EndGlobal
