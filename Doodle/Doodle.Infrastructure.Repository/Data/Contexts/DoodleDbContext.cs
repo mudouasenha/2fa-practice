@@ -11,8 +11,10 @@ namespace Doodle.Infrastructure.Repository.Data.Contexts
 {
     public class DoodleDbContext : DbContext
     {
-        public DoodleDbContext(DbContextOptions<DoodleDbContext> options) : base(options) { }
-        
+        public DoodleDbContext(DbContextOptions<DoodleDbContext> options) : base(options)
+        {
+        }
+
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

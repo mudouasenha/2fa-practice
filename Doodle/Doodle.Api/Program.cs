@@ -3,6 +3,7 @@ using Doodle.Infrastructure.Repository.Data.Contexts;
 using Doodle.Infrastructure.Repository.Extensions;
 using Doodle.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     ContentRootPath = Directory.GetCurrentDirectory(),
     EnvironmentName = Environments.Development,
 });
+//var builder = Host.CreateDefaultBuilder(args);
 SerilogExtensions.AddSerilogApi(builder.Configuration);
 
 // Add services to the container.
@@ -17,8 +19,9 @@ SerilogExtensions.AddSerilogApi(builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer()
-    .AddSwaggerGen()
     .AddDbContext<DoodleDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Doodle")))
+        .AddAsyncInitializer<DbContextInitializer<DoodleDbContext>>()
+    .AddSwaggerGen()
     .AddRepositoryInfrastructure()
     .AddServices()
     .AddCors();
@@ -50,4 +53,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-app.Run();
+await app.InitializeAndRunAsync();

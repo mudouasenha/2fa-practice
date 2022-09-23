@@ -1,4 +1,5 @@
-﻿using Doodle.Services.Users.Models;
+﻿using Doodle.Domain.Entities;
+using Doodle.Services.Users.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace Doodle.Services.Users.Abstractions
 {
     public interface IUsersService
     {
-        Task<bool> InsertUser(UserInputDTO input);
+        Task<User> InsertUser(UserInputDTO input);
 
-        Task<bool> DeleteUser(UserFilterDTO input);
+        Task<User> DeleteUser(UserFilterDTO input);
 
-        Task<bool> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword);
+        Task<User> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword);
     }
 }

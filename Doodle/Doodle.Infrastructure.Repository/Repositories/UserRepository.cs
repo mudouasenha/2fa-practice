@@ -18,7 +18,18 @@ namespace Doodle.Infrastructure.Repository.Repositories
 
         public async Task<User> GetByEmailAndPassword(string email, string password) => await dbSet.AsQueryable()
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Email.Equals(email)
-                                      && p.Password.Equals(password));
+            .FirstOrDefaultAsync(p => p.Email.Equals(email) && p.Password.Equals(password));
+
+        public async Task<bool> ExistsByEmailAndPassword(string email, string password) => await dbSet.AsQueryable()
+            .AsNoTracking()
+            .AnyAsync(p => p.Email.Equals(email) && p.Password.Equals(password));
+
+        public async Task<User> GetByUsernameAndPassword(string username, string password) => await dbSet.AsQueryable()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Username.Equals(username) && p.Password.Equals(password));
+
+        public async Task<bool> ExistsByUsernameAndPassword(string username, string password) => await dbSet.AsQueryable()
+            .AsNoTracking()
+            .AnyAsync(p => p.Username.Equals(username) && p.Password.Equals(password));
     }
 }

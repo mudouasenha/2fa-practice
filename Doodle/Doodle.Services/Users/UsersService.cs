@@ -1,4 +1,5 @@
-﻿using Doodle.Infrastructure.Repository.Repositories.Abstractions;
+﻿using Doodle.Domain.Entities;
+using Doodle.Infrastructure.Repository.Repositories.Abstractions;
 using Doodle.Services.Users.Abstractions;
 using Doodle.Services.Users.Models;
 using System;
@@ -18,19 +19,53 @@ namespace Doodle.Services.Users
             _userRepository = userRepository;
         }
 
-        public Task<bool> DeleteUser(UserFilterDTO input)
+        public async Task<User> DeleteUser(UserFilterDTO input)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByUsernameAndPassword(input.UserName, input.Password);
+
+            if (user == null)
+                throw new Exception("User Not Found");
+
+            var userDeleted = await _userRepository.Delete(user.Id);
+
+            return userDeleted;
         }
 
-        public Task<bool> InsertUser(UserInputDTO input)
+        public async Task<User> InsertUser(UserInputDTO input)
         {
-            throw new NotImplementedException();
+            var userFromRepository = await _userRepository.ExistsByUsernameAndPassword(input.Username, input.Password);
+
+            if (userFromRepository)
+                throw new Exception("User Already Exists");
+
+            var user = new User()
+            {
+                Name = input.Name,
+                Address = input.Address,
+                Email = input.Email,
+                Password = input.Password,
+                PhoneNumber = input.PhoneNumber,
+                Username = input.Username
+            };
+
+            var userInserted = await _userRepository.Insert(user);
+
+            return userInserted;
         }
 
-        public Task<bool> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword)
+        public async Task<User> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword)
         {
-            throw new NotImplementedException();
+            var userFromRepository = await _userRepository.GetByUsernameAndPassword(input.UserName, input.Password);
+
+            if (userFromRepository == null)
+                throw new Exception("User Not Found");
+
+            var userToUpdate = userFromRepository;
+            userToUpdate.Password = newPassword;
+
+            var userUpdated = await _userRepository.Update(userFromRepository);
+
+            return userUpdated;
         }
     }
 }

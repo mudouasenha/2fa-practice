@@ -24,8 +24,8 @@ namespace Doodle.Api.Controllers
             return new List<User> { new User() };
         }
 
-        [HttpPost("signup")]
-        public async Task<User> SignUp()
+        [HttpPost("register")]
+        public async Task<User> Register()
         {
             return new User();
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Doodle.Infrastructure.Repository.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -12,6 +13,12 @@ namespace Doodle.Infrastructure.Repository.Extensions
 {
     public static class HostBuilderExtensions
     {
+        public static async Task InitializeAndRunAsync(this IHost host)
+        {
+            host.RunMigrations<DoodleDbContext>();
+            await host.RunAsync();
+        }
+
         public static IHost RunMigrations<TContext>(this IHost host) where TContext : DbContext
         {
             try
@@ -22,7 +29,7 @@ namespace Doodle.Infrastructure.Repository.Extensions
                 dbContext.Database.Migrate();
 
                 return host;
-            } 
+            }
             catch (Exception ex)
             {
                 Log.Error(ex, "Message={Message}; Method={Method}",
