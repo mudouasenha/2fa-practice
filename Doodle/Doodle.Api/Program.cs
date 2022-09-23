@@ -3,8 +3,6 @@ using Doodle.Infrastructure.Repository.Data.Contexts;
 using Doodle.Infrastructure.Repository.Extensions;
 using Doodle.Infrastructure.Security.Extensions;
 using Doodle.Services.Extensions;
-using Fluent.Infrastructure.FluentModel;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
