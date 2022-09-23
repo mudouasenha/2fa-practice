@@ -1,9 +1,11 @@
 using Doodle.Api.Extensions;
 using Doodle.Infrastructure.Repository.Data.Contexts;
 using Doodle.Infrastructure.Repository.Extensions;
+using Doodle.Infrastructure.Security.Extensions;
 using Doodle.Services.Extensions;
+using Fluent.Infrastructure.FluentModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -11,7 +13,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     ContentRootPath = Directory.GetCurrentDirectory(),
     EnvironmentName = Environments.Development,
 });
-//var builder = Host.CreateDefaultBuilder(args);
+
 SerilogExtensions.AddSerilogApi(builder.Configuration);
 
 // Add services to the container.
@@ -24,7 +26,10 @@ builder.Services.AddEndpointsApiExplorer()
     .AddSwaggerGen()
     .AddRepositoryInfrastructure()
     .AddServices()
-    .AddCors();
+    .AddCors()
+    .Configure<RouteOptions>(options => options.LowercaseUrls = true)
+    .AddSecurity()
+    .AddRazorPages();
 
 var app = builder.Build();
 

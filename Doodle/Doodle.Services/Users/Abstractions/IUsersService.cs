@@ -1,4 +1,5 @@
 ﻿using Doodle.Domain.Entities;
+using Doodle.Services.Common;
 using Doodle.Services.Users.Models;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,14 @@ namespace Doodle.Services.Users.Abstractions
 {
     public interface IUsersService
     {
-        Task<User> InsertUser(UserInputDTO input);
+        Task<Result<User>> Register(UserRegisterInput input);
 
-        Task<User> DeleteUser(UserFilterDTO input);
+        Task<Result<User>> SignIn(UserSignInInput input);
 
-        Task<User> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword);
+        Task<Result<User>> SignOut(UserSignOutInput input);
+
+        Task<Result<User>> DeleteUser(UserFilterDTO input);
+
+        Task<Result<User>> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword);
     }
 }

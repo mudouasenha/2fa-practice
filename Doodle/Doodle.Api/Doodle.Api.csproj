@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Extensions.Hosting.AsyncInitialization" Version="1.0.0" />
+    <PackageReference Include="Fluent.Infrastructure" Version="2.0.0-beta-01" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
@@ -25,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Doodle.Domain\Doodle.Domain.csproj" />
     <ProjectReference Include="..\Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj" />
+	  <ProjectReference Include="..\Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj" />
 	  <ProjectReference Include="..\Doodle.Services\Doodle.Services.csproj" />
   </ItemGroup>
 

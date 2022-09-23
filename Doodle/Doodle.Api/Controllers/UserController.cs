@@ -1,6 +1,9 @@
+using Doodle.Api.Controllers.Models;
 using Doodle.Domain.Entities;
 using Doodle.Infrastructure.Repository.Repositories.Abstractions;
+using Doodle.Services.Common;
 using Doodle.Services.Users.Abstractions;
+using Doodle.Services.Users.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doodle.Api.Controllers
@@ -25,21 +28,38 @@ namespace Doodle.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<User> Register()
+        public async Task<Result<User>> Register(UserRegisterInputModel inputModel)
         {
-            return new User();
+            var result = await _usersService.Register(UserRegisterInputModel.ToInput(inputModel));
+            return result;
         }
 
         [HttpPost("signin")]
-        public async Task<User> SignIn()
+        public async Task<Result<User>> SignIn(UserSignInInputModel inputModel)
         {
-            return new User();
+            var result = await _usersService.SignIn(UserSignInInputModel.ToInput(inputModel));
+            return result;
         }
 
-        [HttpDelete("deleteaccount")]
-        public async Task<bool> DeleteAccount()
+        [HttpPost("signout")]
+        public async Task<Result<User>> SignOut(UserSignOutInputModel inputModel)
         {
-            return true;
+            var result = await _usersService.SignOut(UserSignOutInputModel.ToInput(inputModel));
+            return result;
+        }
+
+        [HttpPut("change-password")]
+        public async Task<Result<User>> ChangePassword(UserSignOutInputModel inputModel)
+        {
+            throw new NotImplementedException("Not yet Implemented");
+        }
+
+        [HttpDelete("delete-account")]
+        public async Task<Result<User>> DeleteAccount()
+        {
+            throw new NotImplementedException("Not yet Implemented");
+            //var result = await _usersService.DeleteUser(UserRegisterInputModel.ToInput(inputModel));
+            //return result;
         }
     }
 }

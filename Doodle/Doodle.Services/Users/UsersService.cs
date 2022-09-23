@@ -1,5 +1,6 @@
 ﻿using Doodle.Domain.Entities;
 using Doodle.Infrastructure.Repository.Repositories.Abstractions;
+using Doodle.Services.Common;
 using Doodle.Services.Users.Abstractions;
 using Doodle.Services.Users.Models;
 using System;
@@ -19,21 +20,21 @@ namespace Doodle.Services.Users
             _userRepository = userRepository;
         }
 
-        public async Task<User> DeleteUser(UserFilterDTO input)
+        public async Task<Result<User>> DeleteUser(UserFilterDTO input)
         {
-            var user = await _userRepository.GetByUsernameAndPassword(input.UserName, input.Password);
+            var user = await _userRepository.GetByUsername(input.UserName);
 
             if (user == null)
                 throw new Exception("User Not Found");
 
             var userDeleted = await _userRepository.Delete(user.Id);
 
-            return userDeleted;
+            return new Result<User>(userDeleted, "User deleted Successfully", true);
         }
 
-        public async Task<User> InsertUser(UserInputDTO input)
+        public async Task<Result<User>> Register(UserRegisterInput input)
         {
-            var userFromRepository = await _userRepository.ExistsByUsernameAndPassword(input.Username, input.Password);
+            var userFromRepository = await _userRepository.ExistsByUsername(input.Username);
 
             if (userFromRepository)
                 throw new Exception("User Already Exists");
@@ -45,17 +46,30 @@ namespace Doodle.Services.Users
                 Email = input.Email,
                 Password = input.Password,
                 PhoneNumber = input.PhoneNumber,
-                Username = input.Username
+                Username = input.Username,
+                CreatedAt = DateTime.Now
             };
 
             var userInserted = await _userRepository.Insert(user);
 
-            return userInserted;
+            return new Result<User>(userInserted, "User registered Successfully", true);
         }
 
-        public async Task<User> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword)
+        public async Task<Result<User>> SignIn(UserSignInInput input)
         {
-            var userFromRepository = await _userRepository.GetByUsernameAndPassword(input.UserName, input.Password);
+            var userFromRepository = await _userRepository.GetByUsername(input.Username);
+            return new Result<User>(new User(), "Signed in Successfully", true);
+        }
+
+        public async Task<Result<User>> SignOut(UserSignOutInput input)
+        {
+            var userFromRepository = await _userRepository.GetByUsername(input.Username);
+            return new Result<User>(new User(), "Signed out Successfully", true);
+        }
+
+        public async Task<Result<User>> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword)
+        {
+            var userFromRepository = await _userRepository.GetByUsername(input.UserName);
 
             if (userFromRepository == null)
                 throw new Exception("User Not Found");
@@ -65,7 +79,7 @@ namespace Doodle.Services.Users
 
             var userUpdated = await _userRepository.Update(userFromRepository);
 
-            return userUpdated;
+            return new Result<User>(userUpdated, "Password Updated Successfully", true);
         }
     }
 }
