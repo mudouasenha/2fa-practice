@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32505.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Api", "Doodle.Api\Doodle.Api.csproj", "{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Api", "Doodle.Api\Doodle.Api.csproj", "{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0} = {6E241373-94BF-4D71-AF36-9EAF2F49EDF0}
 		{BF5FCC52-716B-4187-9932-12F3C160B324} = {BF5FCC52-716B-4187-9932-12F3C160B324}
@@ -11,13 +11,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Api", "Doodle.Api\Do
 		{FCD45BE5-F170-441A-BD07-7EC71D689A6A} = {FCD45BE5-F170-441A-BD07-7EC71D689A6A}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Services", "Doodle.Services\Doodle.Services.csproj", "{BF5FCC52-716B-4187-9932-12F3C160B324}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Services", "Doodle.Services\Doodle.Services.csproj", "{BF5FCC52-716B-4187-9932-12F3C160B324}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Domain", "Doodle.Domain\Doodle.Domain.csproj", "{C79CCCB7-18EB-420D-9A8A-244981435882}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Domain", "Doodle.Domain\Doodle.Domain.csproj", "{C79CCCB7-18EB-420D-9A8A-244981435882}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Infrastructure.Security", "Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj", "{FCD45BE5-F170-441A-BD07-7EC71D689A6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Security", "Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj", "{FCD45BE5-F170-441A-BD07-7EC71D689A6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Infrastructure.Repository", "Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj", "{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Repository", "Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj", "{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Presentation", "Doodle.Presentation\Doodle.Presentation.csproj", "{7BFCA522-9A80-41BF-B379-8504A436B265}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BFCA522-9A80-41BF-B379-8504A436B265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BFCA522-9A80-41BF-B379-8504A436B265}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BFCA522-9A80-41BF-B379-8504A436B265}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BFCA522-9A80-41BF-B379-8504A436B265}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
