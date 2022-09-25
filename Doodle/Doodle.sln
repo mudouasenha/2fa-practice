@@ -3,14 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32505.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Api", "Doodle.Api\Doodle.Api.csproj", "{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}"
-	ProjectSection(ProjectDependencies) = postProject
-		{FCD45BE5-F170-441A-BD07-7EC71D689A6A} = {FCD45BE5-F170-441A-BD07-7EC71D689A6A}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Presentation", "5 - Presentation\Doodle.Presentation\Doodle.Presentation.csproj", "{FE180DBD-FE38-43EC-83D8-28B544EF5081}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Security", "Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj", "{FCD45BE5-F170-441A-BD07-7EC71D689A6A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Application Services", "1 - Application Services", "{4FD660DE-C477-4D22-9FB7-26D2B13872A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Presentation", "Doodle.Presentation\Doodle.Presentation.csproj", "{7BFCA522-9A80-41BF-B379-8504A436B265}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Infrastructure", "2 - Infrastructure", "{6A20B60F-82C5-41F4-BC2B-1FE3967EECC6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Services", "3 - Services", "{E5AE7BCF-B5D2-45F8-B203-A450327A26B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Domain", "4 - Domain", "{7CCF6B63-9880-49E3-BBCE-162266387EE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Presentation", "5 - Presentation", "{DE80DA8A-A530-495E-9BD4-8701B7DB7939}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Domain", "4 - Domain\Doodle.Domain\Doodle.Domain.csproj", "{7120D70A-5614-42C3-BC2B-620D89C4EA4B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Services", "3 - Services\Doodle.Services\Doodle.Services.csproj", "{9A25E36C-B8CB-4B60-838B-EC22982F1344}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Repository", "2 - Infrastructure\Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj", "{2D129C53-76D6-41FD-98CB-226F5A648953}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Security", "2 - Infrastructure\Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj", "{88C14446-3966-481A-9BC3-F7CADB02CDBE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Api", "1 - Application Services\Doodle.Api\Doodle.Api.csproj", "{58F94046-A950-4D6F-A8BF-B3213FD4F7A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,21 +31,41 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7BFCA522-9A80-41BF-B379-8504A436B265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7BFCA522-9A80-41BF-B379-8504A436B265}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7BFCA522-9A80-41BF-B379-8504A436B265}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7BFCA522-9A80-41BF-B379-8504A436B265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE180DBD-FE38-43EC-83D8-28B544EF5081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE180DBD-FE38-43EC-83D8-28B544EF5081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE180DBD-FE38-43EC-83D8-28B544EF5081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE180DBD-FE38-43EC-83D8-28B544EF5081}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7120D70A-5614-42C3-BC2B-620D89C4EA4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7120D70A-5614-42C3-BC2B-620D89C4EA4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7120D70A-5614-42C3-BC2B-620D89C4EA4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7120D70A-5614-42C3-BC2B-620D89C4EA4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A25E36C-B8CB-4B60-838B-EC22982F1344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A25E36C-B8CB-4B60-838B-EC22982F1344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A25E36C-B8CB-4B60-838B-EC22982F1344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A25E36C-B8CB-4B60-838B-EC22982F1344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D129C53-76D6-41FD-98CB-226F5A648953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D129C53-76D6-41FD-98CB-226F5A648953}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D129C53-76D6-41FD-98CB-226F5A648953}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D129C53-76D6-41FD-98CB-226F5A648953}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88C14446-3966-481A-9BC3-F7CADB02CDBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88C14446-3966-481A-9BC3-F7CADB02CDBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88C14446-3966-481A-9BC3-F7CADB02CDBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88C14446-3966-481A-9BC3-F7CADB02CDBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F94046-A950-4D6F-A8BF-B3213FD4F7A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F94046-A950-4D6F-A8BF-B3213FD4F7A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F94046-A950-4D6F-A8BF-B3213FD4F7A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F94046-A950-4D6F-A8BF-B3213FD4F7A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FE180DBD-FE38-43EC-83D8-28B544EF5081} = {DE80DA8A-A530-495E-9BD4-8701B7DB7939}
+		{7120D70A-5614-42C3-BC2B-620D89C4EA4B} = {7CCF6B63-9880-49E3-BBCE-162266387EE3}
+		{9A25E36C-B8CB-4B60-838B-EC22982F1344} = {E5AE7BCF-B5D2-45F8-B203-A450327A26B8}
+		{2D129C53-76D6-41FD-98CB-226F5A648953} = {6A20B60F-82C5-41F4-BC2B-1FE3967EECC6}
+		{88C14446-3966-481A-9BC3-F7CADB02CDBE} = {6A20B60F-82C5-41F4-BC2B-1FE3967EECC6}
+		{58F94046-A950-4D6F-A8BF-B3213FD4F7A1} = {4FD660DE-C477-4D22-9FB7-26D2B13872A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1757F602-FEC3-4FC4-BAA2-9D05683BA087}
