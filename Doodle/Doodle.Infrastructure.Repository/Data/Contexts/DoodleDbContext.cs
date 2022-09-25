@@ -1,21 +1,14 @@
-﻿using Doodle.Domain.Entities;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Doodle.Infrastructure.Repository.Data.Contexts
 {
-    public class DoodleDbContext : DbContext
+    public class DoodleDbContext : IdentityDbContext
     {
         public DoodleDbContext(DbContextOptions<DoodleDbContext> options) : base(options)
         {
         }
-
-        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

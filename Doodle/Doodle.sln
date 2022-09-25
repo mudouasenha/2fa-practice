@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Secur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Repository", "Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj", "{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Presentation", "Doodle.Presentation\Doodle.Presentation.csproj", "{7BFCA522-9A80-41BF-B379-8504A436B265}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Presentation", "Doodle.Presentation\Doodle.Presentation.csproj", "{7BFCA522-9A80-41BF-B379-8504A436B265}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
