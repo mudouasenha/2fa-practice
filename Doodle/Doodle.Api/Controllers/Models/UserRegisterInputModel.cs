@@ -1,4 +1,4 @@
-﻿using Doodle.Services.Users.Models;
+﻿using Doodle.Api.Services.Users.Models;
 
 namespace Doodle.Api.Controllers.Models
 {

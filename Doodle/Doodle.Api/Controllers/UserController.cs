@@ -1,9 +1,7 @@
 using Doodle.Api.Controllers.Models;
+using Doodle.Api.Services.Common;
+using Doodle.Api.Services.Users.Abstractions;
 using Doodle.Domain.Entities;
-using Doodle.Infrastructure.Repository.Repositories.Abstractions;
-using Doodle.Services.Common;
-using Doodle.Services.Users.Abstractions;
-using Doodle.Services.Users.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doodle.Api.Controllers

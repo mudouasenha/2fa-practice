@@ -5,19 +5,10 @@ VisualStudioVersion = 17.2.32505.173
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Api", "Doodle.Api\Doodle.Api.csproj", "{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}"
 	ProjectSection(ProjectDependencies) = postProject
-		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0} = {6E241373-94BF-4D71-AF36-9EAF2F49EDF0}
-		{BF5FCC52-716B-4187-9932-12F3C160B324} = {BF5FCC52-716B-4187-9932-12F3C160B324}
-		{C79CCCB7-18EB-420D-9A8A-244981435882} = {C79CCCB7-18EB-420D-9A8A-244981435882}
 		{FCD45BE5-F170-441A-BD07-7EC71D689A6A} = {FCD45BE5-F170-441A-BD07-7EC71D689A6A}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Services", "Doodle.Services\Doodle.Services.csproj", "{BF5FCC52-716B-4187-9932-12F3C160B324}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Domain", "Doodle.Domain\Doodle.Domain.csproj", "{C79CCCB7-18EB-420D-9A8A-244981435882}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Security", "Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj", "{FCD45BE5-F170-441A-BD07-7EC71D689A6A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Repository", "Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj", "{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Presentation", "Doodle.Presentation\Doodle.Presentation.csproj", "{7BFCA522-9A80-41BF-B379-8504A436B265}"
 EndProject
@@ -31,22 +22,10 @@ Global
 		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48F5115E-FC55-4F40-AC78-60CBAA9C96D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BF5FCC52-716B-4187-9932-12F3C160B324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BF5FCC52-716B-4187-9932-12F3C160B324}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BF5FCC52-716B-4187-9932-12F3C160B324}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BF5FCC52-716B-4187-9932-12F3C160B324}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C79CCCB7-18EB-420D-9A8A-244981435882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C79CCCB7-18EB-420D-9A8A-244981435882}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C79CCCB7-18EB-420D-9A8A-244981435882}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C79CCCB7-18EB-420D-9A8A-244981435882}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCD45BE5-F170-441A-BD07-7EC71D689A6A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6E241373-94BF-4D71-AF36-9EAF2F49EDF0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7BFCA522-9A80-41BF-B379-8504A436B265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7BFCA522-9A80-41BF-B379-8504A436B265}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BFCA522-9A80-41BF-B379-8504A436B265}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,8 +1,9 @@
 using Doodle.Api.Extensions;
-using Doodle.Infrastructure.Repository.Data.Contexts;
+using Doodle.Api.Repository.Data.Contexts;
+using Doodle.Api.Repository.Extensions;
+using Doodle.Api.Services.Extensions;
 using Doodle.Infrastructure.Repository.Extensions;
-using Doodle.Infrastructure.Security.Extensions;
-using Doodle.Services.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -22,12 +23,18 @@ builder.Services.AddEndpointsApiExplorer()
     .AddDbContext<DoodleDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Doodle")))
         .AddAsyncInitializer<DbContextInitializer<DoodleDbContext>>()
     .AddSwaggerGen()
-    .AddRepositoryInfrastructure()
+    //.AddRepositoryInfrastructure()
     .AddServices()
     .AddCors()
     .Configure<RouteOptions>(options => options.LowercaseUrls = true)
-    .AddSecurity()
+    //.AddSecurity()
     .AddRazorPages();
+
+builder.Services.AddDbContext<DoodleDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Doodle")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<DoodleDbContext>();
 
 var app = builder.Build();
 
@@ -48,6 +55,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication(); ;
 
 app.UseAuthorization();
 

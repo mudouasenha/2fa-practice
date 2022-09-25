@@ -11,8 +11,5 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj" />
-  </ItemGroup>
 
 </Project>

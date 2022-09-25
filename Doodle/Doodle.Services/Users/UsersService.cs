@@ -1,21 +1,15 @@
 ﻿using Doodle.Domain.Entities;
-using Doodle.Infrastructure.Repository.Repositories.Abstractions;
 using Doodle.Services.Common;
 using Doodle.Services.Users.Abstractions;
 using Doodle.Services.Users.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Doodle.Services.Users
 {
     public class UsersService : IUsersService
     {
-        private readonly IUserRepository _userRepository;
+        //private readonly IUserRepository _userRepository;
 
-        public UsersService(IUserRepository userRepository)
+        /*public UsersService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
@@ -80,6 +74,31 @@ namespace Doodle.Services.Users
             var userUpdated = await _userRepository.Update(userFromRepository);
 
             return new Result<User>(userUpdated, "Password Updated Successfully", true);
+        }*/
+
+        public Task<Result<User>> DeleteUser(UserFilterDTO input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<User>> Register(UserRegisterInput input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<User>> SignIn(UserSignInInput input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<User>> SignOut(UserSignOutInput input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<User>> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword)
+        {
+            throw new NotImplementedException();
         }
     }
 }
