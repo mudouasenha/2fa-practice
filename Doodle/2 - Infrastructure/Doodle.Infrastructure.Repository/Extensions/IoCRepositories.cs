@@ -1,9 +1,9 @@
 ﻿using Doodle.Infrastructure.Repository.Data;
 using Doodle.Infrastructure.Repository.Repositories;
 using Doodle.Infrastructure.Repository.Repositories.Abstractions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Doodle.Infrastructure.Repository.Extensions;
 
 namespace Doodle.Infrastructure.Repository.Extensions
 {
@@ -11,7 +11,8 @@ namespace Doodle.Infrastructure.Repository.Extensions
     {
         public static IServiceCollection AddRepositoryInfrastructure(this IServiceCollection services) =>
             services.AddRepositories()
-                    .AddDatabaseTransaction();
+                    .AddDatabaseTransaction()
+                    .AddDatabaseDeveloperPageExceptionFilter();
 
         public static IServiceCollection AddRepositories(this IServiceCollection services) =>
             services.AddScoped<IUserRepository, UserRepository>();
@@ -22,5 +23,7 @@ namespace Doodle.Infrastructure.Repository.Extensions
 
             return services;
         }
+
+        public static IApplicationBuilder UseDatabaseExceptionFilter(this IApplicationBuilder builder) => builder.UseMigrationsEndPoint();
     }
 }
