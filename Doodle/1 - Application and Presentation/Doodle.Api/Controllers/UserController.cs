@@ -1,7 +1,9 @@
 using Doodle.Api.Controllers.Models;
+using Doodle.Domain.Constants;
 using Doodle.Domain.Entities;
 using Doodle.Services.Common;
 using Doodle.Services.Users.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doodle.Api.Controllers
@@ -19,12 +21,36 @@ namespace Doodle.Api.Controllers
             _usersService = usersService;
         }
 
-        [HttpGet()]
+        [HttpGet(), Authorize(Roles = RoleConstants.Admin)]
         public async Task<IEnumerable<User>> Get()
         {
             return new List<User> { new User() };
         }
 
+        /// <summary>
+        /// Registers an user.
+        /// </summary>
+        /// <param name="registerInput"></param>
+        /// <returns>A newly created User</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /user/register
+        ///     {
+        ///        "Name": "matheus",
+        ///        "Username": "username",
+        ///        "Address": "5th Street",
+        ///        "Email": "test@test.com",
+        ///        "Password": "password",
+        ///        "PhoneNumber": "4444444444"
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Returns the newly created User</response>
+        /// <response code="400">If the registration fails</response>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("register")]
         public async Task<Result<User>> Register(UserRegisterInputModel inputModel)
         {

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>94e3429d-a5aa-433a-836a-56d2dba2c24a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +32,8 @@
     <ProjectReference Include="..\..\2 - Infrastructure\Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj" />
     <ProjectReference Include="..\..\3 - Services\Doodle.Services\Doodle.Services.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://docs.renovatebot.com/renovate-schema.json" /></VisualStudio></ProjectExtensions>
 
 
 </Project>
