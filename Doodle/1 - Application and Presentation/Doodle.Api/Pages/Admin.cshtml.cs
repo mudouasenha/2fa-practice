@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Doodle.Api.Pages;
 
+[Authorize(Policy = "TwoFactorEnabled")]
 public class AdminModel : PageModel
 {
     public IActionResult OnGet()

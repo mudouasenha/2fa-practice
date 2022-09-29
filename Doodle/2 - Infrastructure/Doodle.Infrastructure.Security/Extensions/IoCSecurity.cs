@@ -20,36 +20,45 @@ namespace Doodle.Infrastructure.Security.Extensions
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<DoodleDbContext>().AddDefaultTokenProviders();
 
-            services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, AdditionalUserClaimsPrincipalFactory>()
-                .AddAuthorization(options => options.AddPolicy("TwoFactorEnabled", x => x.RequireClaim("amr", "mfa")));
+            services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, AdditionalUserClaimsPrincipalFactory>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("TwoFactorEnabled", x => x.RequireClaim("amr", "mfa"));
+                options.AddPolicy("AdminOnly", x => x.RequireClaim("Role", "Admin"));
+            });
 
             services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.AccessDeniedPath = "/Areas/Identity/Pages/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
+            })
+            .AddOpenIdConnect(options =>
+            {
+                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.Authority = config["OpenIdConnectKeyOptions:Authority"];
+                options.RequireHttpsMetadata = false;
+                options.ClientId = config["OpenIdConnectKeyOptions:ClientId"];
+                options.ClientSecret = config["OpenIdConnectKeyOptions:ClientSecret"];
+                // Code with PKCE can also be used here
+                options.ResponseType = "code id_token";
+                options.Scope.Add("profile");
+                options.Scope.Add("offline_access");
+                options.SaveTokens = true;
+                options.Events = new OpenIdConnectEvents
                 {
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                })
-                .AddCookie()
-                .AddOpenIdConnect(options =>
-                {
-                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.Authority = config["OpenIdConnectKeyOptions:Authority"];
-                    options.RequireHttpsMetadata = false;
-                    options.ClientId = config["OpenIdConnectKeyOptions:ClientId"];
-                    options.ClientSecret = config["OpenIdConnectKeyOptions:ClientSecret"];
-                    // Code with PKCE can also be used here
-                    options.ResponseType = "code id_token";
-                    options.Scope.Add("profile");
-                    options.Scope.Add("offline_access");
-                    options.SaveTokens = true;
-                    options.Events = new OpenIdConnectEvents
+                    OnRedirectToIdentityProvider = context =>
                     {
-                        OnRedirectToIdentityProvider = context =>
-                        {
-                            context.ProtocolMessage.SetParameter("acr_values", "mfa");
-                            return Task.FromResult(0);
-                        }
-                    };
-                });
+                        context.ProtocolMessage.SetParameter("acr_values", "mfa");
+                        return Task.FromResult(0);
+                    }
+                };
+            });
 
             return services;
         }
