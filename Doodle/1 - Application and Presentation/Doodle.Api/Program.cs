@@ -2,6 +2,7 @@ using Doodle.Api.Extensions;
 using Doodle.Infrastructure.Repository.Extensions;
 using Doodle.Infrastructure.Security.Extensions;
 using Doodle.Services.Extensions;
+using Hellang.Middleware.ProblemDetails;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -15,6 +16,10 @@ SerilogExtensions.AddSerilogApi(builder.Configuration);
 builder.Host.UseSerilog(Log.Logger);
 
 // Add services to the container.
+builder.Services.AddProblemDetails(setup => setup.IncludeExceptionDetails = (ctx, env) =>
+Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development" ||
+Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Staging");
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer()
@@ -28,6 +33,7 @@ builder.Services.AddEndpointsApiExplorer()
 var app = builder.Build();
 
 // Configuration
+app.UseProblemDetails();
 app.UseRouting();
 
 app.UseCors(x =>

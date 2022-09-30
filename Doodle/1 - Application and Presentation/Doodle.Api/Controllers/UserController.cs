@@ -48,7 +48,6 @@ namespace Doodle.Api.Controllers
         /// </remarks>
         /// <response code="200">Returns the newly created User</response>
         /// <response code="400">If the registration fails</response>
-        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("register")]
