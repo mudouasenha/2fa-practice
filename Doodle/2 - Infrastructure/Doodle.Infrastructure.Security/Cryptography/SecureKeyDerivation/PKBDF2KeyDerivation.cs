@@ -1,17 +1,28 @@
-﻿using Doodle.Domain.Extensions;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace Doodle.Infrastructure.Security.Cryptography.SecureKeyDerivation
 {
     public class PKBDF2KeyDerivation
     {
-        public static string DeriveKey(string passwd, byte[] salt)
+        private const int HmacSha256NumBytesOutput = 32;
+        private const int IterationCount = 1000;
+
+        public static bool HasMatchedDerivedKey(string passwd, byte[] salt, string derivedKeyToMatch)
         {
-            const int HmacSha256NumBytesOutput = 32;
+            var derivedKey = DeriveKey(passwd, salt);
 
-            var derivedKey = KeyDerivation.Pbkdf2(passwd, salt, KeyDerivationPrf.HMACSHA256, 1000, HmacSha256NumBytesOutput);
+            for (int i = 0; i < derivedKeyToMatch.Length; i++)
+                if (derivedKey[i] != derivedKeyToMatch[i])
+                    return false;
 
-            return derivedKey.AsString();
+            return true;
+        }
+
+        public static byte[] DeriveKey(string passwd, byte[] salt)
+        {
+            var derivedKey = KeyDerivation.Pbkdf2(passwd, salt, KeyDerivationPrf.HMACSHA256, IterationCount, HmacSha256NumBytesOutput);
+
+            return derivedKey;
         }
     }
 }

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\2 - Infrastructure\Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj" />
+    <ProjectReference Include="..\..\2 - Infrastructure\Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj" />
     <ProjectReference Include="..\..\4 - Domain\Doodle.Domain\Doodle.Domain.csproj" />
   </ItemGroup>
 

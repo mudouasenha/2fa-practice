@@ -4,57 +4,47 @@ namespace Doodle.Infrastructure.Security.Cryptography.Confidentiality.Symmetric
 {
     public class AesSymmetricEncryption
     {
-        public static void Main()
+        public static void Main(string data)
         {
-            string original = "Here is some data to encrypt!";
-
             using Aes myAes = Aes.Create();
-            // Encrypt the string to an array of bytes.
-            byte[] encrypted = EncryptStringToBytes_Aes(original, myAes.Key, myAes.IV);
 
-            // Decrypt the bytes to a string.
-            string roundtrip = DecryptStringFromBytes_Aes(encrypted, myAes.Key, myAes.IV);
+            byte[] encrypted = Encrypt(data, myAes.Key, myAes.IV);
 
-            //Display the original data and the decrypted data.
-            Console.WriteLine("Original:   {0}", original);
+            string roundtrip = Decrypt(encrypted, myAes.Key, myAes.IV);
+
+            Console.WriteLine("Original:   {0}", data);
             Console.WriteLine("Round Trip: {0}", roundtrip);
         }
 
-        private static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
+        private static byte[] Encrypt(string plainText, byte[] Key, byte[] IV)
         {
-            // Check arguments.
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException("plainText");
             CheckArguments(Key, IV);
 
             byte[] encrypted;
 
-            // Create an Aes object
-            // with the specified key and IV.
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
+            Aes aesAlg = Aes.Create();
+            aesAlg.Key = Key;
+            aesAlg.IV = IV;
 
-                // Create an encryptor to perform the stream transform.
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+            // Create an encryptor to perform the stream transform.
+            ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
-                // Create the streams used for encryption.
-                using MemoryStream msEncrypt = new();
-                using CryptoStream csEncrypt = new(msEncrypt, encryptor, CryptoStreamMode.Write);
-                using (StreamWriter swEncrypt = new(csEncrypt))
-                {
-                    //Write all data to the stream.
-                    swEncrypt.Write(plainText);
-                }
-                encrypted = msEncrypt.ToArray();
-            }
+            // Create the streams used for encryption.
+            using MemoryStream msEncrypt = new();
+            using CryptoStream csEncrypt = new(msEncrypt, encryptor, CryptoStreamMode.Write);
+            using StreamWriter swEncrypt = new(csEncrypt);
+
+            //Write all data to the stream.
+            swEncrypt.Write(plainText);
+            encrypted = msEncrypt.ToArray();
 
             // Return the encrypted bytes from the memory stream.
             return encrypted;
         }
 
-        private static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
+        private static string Decrypt(byte[] cipherText, byte[] Key, byte[] IV)
         {
             if (cipherText == null || cipherText.Length <= 0)
                 throw new ArgumentNullException("cipherText");

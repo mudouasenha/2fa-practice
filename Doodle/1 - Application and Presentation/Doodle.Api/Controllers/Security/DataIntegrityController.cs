@@ -1,6 +1,6 @@
-﻿using Doodle.Api.Controllers.Models;
-using Doodle.Api.Controllers.Security.Models;
+﻿using Doodle.Api.Controllers.Security.Models;
 using Doodle.Services.Common;
+using Doodle.Services.Security.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doodle.Api.Controllers.Security
@@ -10,18 +10,22 @@ namespace Doodle.Api.Controllers.Security
     public class DataIntegrityController : ControllerBase
     {
         private readonly ILogger<DataIntegrityController> _logger;
+        private readonly ICryptoService _cryptoService;
 
-        public DataIntegrityController(ILogger<DataIntegrityController> logger)
+        public DataIntegrityController(ILogger<DataIntegrityController> logger, ICryptoService cryptoService)
         {
             _logger = logger;
+            _cryptoService = cryptoService;
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("test-integrity")]
-        public async Task<Result<DataIntegritySummaryResultModel>> TestIntegrity(UserRegisterInputModel inputModel)
+        public async Task<Result<DataIntegritySummaryResultModel>> TestIntegrity(DataIntegrityInputModel inputModel)
         {
-            throw new NotImplementedException("not yet implemented");
+            var result = _cryptoService.GenerateExecutionSummary(DataIntegrityInputModel.ToDto(inputModel));
+
+            return new Result<DataIntegritySummaryResultModel>(DataIntegritySummaryResultModel.FromDto(result), "Comparação realizada", true);
         }
     }
 }
