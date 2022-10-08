@@ -1,12 +1,13 @@
-﻿using Doodle.Domain.Enums;
+﻿using Doodle.Domain.Entities;
+using Doodle.Domain.Enums;
 using Doodle.Domain.Extensions;
 using Doodle.Infrastructure.Repository.Repositories.Abstractions;
 using Doodle.Infrastructure.Security.Cryptography;
+using Doodle.Infrastructure.Security.Cryptography.Confidentiality.Symmetric;
 using Doodle.Infrastructure.Security.Cryptography.Integrity;
 using Doodle.Infrastructure.Security.Cryptography.SecureKeyDerivation;
 using Doodle.Services.Security.Abstractions;
 using Doodle.Services.Security.Models;
-using Doodle.Services.Users.Abstractions;
 using Doodle.Services.Users.Models;
 
 namespace Doodle.Services.Security
@@ -14,12 +15,14 @@ namespace Doodle.Services.Security
     public class CryptoService : ICryptoService
     {
         private IUserRepository _userRepository;
-        private IUsersService _usersService;
+        //private IUsersService _usersService;
 
-        public CryptoService(IUserRepository userRepository, IUsersService usersService)
+        // BUSCA DE USUÁRIOS DEVE SER EM FORÇA BRUTA. O IV NÃO PODE SER GUARDADO E PRECISA SER DERIVADO DO SALT,
+        // PORTANTO NÃO SE SABE O SALT/REGISTRO CORRETO. DEVO DERIVAR O IV E CHAVE PRA ***BUSCAR O USUÁRIO***, USANDO CADA SALT ARMAZENADO NA BASE
+        public CryptoService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _usersService = usersService;
+            //_usersService = usersService;
         }
 
         public (byte[] derivedPassword, byte[] salt) GenerateDerivedKey(string password)
@@ -30,19 +33,19 @@ namespace Doodle.Services.Security
             return (derivedKey, salt);
         }
 
-        public bool MatchDerivedKey(string password, byte[] salt, string derivedKeyToMatch)
+        public bool MatchDerivedKey(string password, byte[] salt, byte[] derivedKeyToMatch)
         {
-            var derivedKeyCheck = PKBDF2KeyDerivation.HasMatchedDerivedKey(password, salt, derivedKeyToMatch);
+            var derivedKeyCheck = PKBDF2KeyDerivation.HasMatchedDerivedKey(password, salt, derivedKeyToMatch.AsHexadecimalString());
 
             return derivedKeyCheck;
         }
 
-        public bool MatchHash(HashAlgorithmOptionsEnum hashOption, string data, string password)
+        public bool MatchHash(HashAlgorithmOptionsEnum hashOption, string data, byte[] password, string hashToVerify)
         {
             bool hashedCheck;
             if (hashOption == HashAlgorithmOptionsEnum.HMACSHA512)
-                hashedCheck = HMACSHA512Algorithm.VerifyHash(password.ToByteArray(), data.ToByteArray());
-            else hashedCheck = HMACSHA256Algorithm.VerifyHash(password.ToByteArray(), data.ToByteArray());
+                hashedCheck = HMACSHA512Algorithm.VerifyHash(password, data, hashToVerify);
+            else hashedCheck = HMACSHA256Algorithm.VerifyHash(password, data, hashToVerify);
 
             return hashedCheck;
         }
@@ -51,35 +54,38 @@ namespace Doodle.Services.Security
         {
             var (derivedKey, salt) = GenerateDerivedKey(input.Key);
 
-            var derivedKeyCheck = MatchDerivedKey(input.Key, salt, derivedKey.AsString());
+            var derivedKeyCheck = MatchDerivedKey(input.Key, salt, derivedKey);
 
-            var hash = GenerateKeyedHashFromData(input.HashAlgorithmOption, input.InputData, input.Key);
+            var hash = GenerateKeyedHashFromData(input.HashAlgorithmOption, input.InputData, derivedKey);
 
-            var hashCheck = MatchHash(input.HashAlgorithmOption, input.InputData, derivedKey.AsString());
+            var hashCheck = MatchHash(input.HashAlgorithmOption, input.InputData, derivedKey, hash);
 
             return new DataIntegritySummaryResultDTO()
             {
+                InputData = input.InputData,
+                EncodedAndDecodedInputData = input.InputData.ToByteArray().AsString(),
                 Key = input.Key,
-                Salt = salt.AsString(),
-                DerivedKey = derivedKey.AsString(),
+                Salt = salt.AsHexadecimalString(),
+                EncodedAndDecodedSalt = salt.AsHexadecimalString().FromHexStringToByteArray().AsHexadecimalString(),
+                DerivedKey = derivedKey.AsHexadecimalString(),
+                EncodedAndDecodedDerivedKey = derivedKey.AsHexadecimalString().FromHexStringToByteArray().AsHexadecimalString(),
                 DerivedKeyCheckResult = derivedKeyCheck,
                 HashedResult = hash,
+                EncodedAndDecodedHashedResult = hash.ToByteArray().AsString(),
                 HashCheckResult = hashCheck,
                 DataEncryptionStrategy = input.DataEncryptionStrategy,
                 HashAlgorithmOption = input.HashAlgorithmOption
             };
         }
 
-        public string GenerateKeyedHashFromData(HashAlgorithmOptionsEnum hashOption, string data, string password)
+        public string GenerateKeyedHashFromData(HashAlgorithmOptionsEnum hashOption, string data, byte[] derivedKey)
         {
-            var (derivedKey, _) = GenerateDerivedKey(password);
+            byte[] hashedData;
 
-            string hashedData;
-            if (hashOption == HashAlgorithmOptionsEnum.HMACSHA512)
-                hashedData = HMACSHA512Algorithm.HashData(derivedKey, data.ToByteArray());
-            else hashedData = HMACSHA256Algorithm.HashData(derivedKey, data.ToByteArray());
+            if (hashOption == HashAlgorithmOptionsEnum.HMACSHA512) hashedData = HMACSHA512Algorithm.HashData(derivedKey, data);
+            else hashedData = HMACSHA256Algorithm.HashData(derivedKey, data);
 
-            return hashedData;
+            return hashedData.AsHexadecimalString();
         }
 
         public async Task<byte[]> GetUserCredentials(UserFilterDTO userFilter)
@@ -87,6 +93,43 @@ namespace Doodle.Services.Security
             var user = await _userRepository.GetByUsernameAndPassword(userFilter.UserName, userFilter.Password);
 
             return new byte[1];
+        }
+
+        public UserEncryptedData GenerateUserEncryptionData(string username, string password)
+        {
+            var salt = SaltGenerator.GenerateSalt();
+            var iv = PKBDF2KeyDerivation.DeriveKey(password, salt, true);
+            var derivedPassword = PKBDF2KeyDerivation.DeriveKey(password, salt);
+
+            var encryptedPassword = AesGcmSymmetricEncryption.Encrypt(password, derivedPassword, iv);
+            var encryptedUsername = ScryptSymmetricEncryption.Encrypt(username, salt);
+
+            return new UserEncryptedData
+            {
+                EncryptedUsername = encryptedUsername,
+                EncryptedPassword = encryptedPassword,
+                Salt = salt.AsHexadecimalString()
+            };
+        }
+
+        public User VerifyLogin(List<User> users, string username, string password)
+        {
+            foreach (var user in users)
+            {
+                var salt = user.Salt.FromHexStringToByteArray();
+
+                var iv = PKBDF2KeyDerivation.DeriveKey(password, salt, true);
+                var derivedPassword = PKBDF2KeyDerivation.DeriveKey(password, salt);
+
+                var encryptedPassword = AesGcmSymmetricEncryption.Encrypt(password, derivedPassword, iv);
+                var hasEqualUsername = ScryptSymmetricEncryption.VerifyEncrypt(username, salt, user.Username);
+
+                var hasEqualPassword = string.Equals(encryptedPassword, user.Password);
+                if (hasEqualUsername & hasEqualPassword)
+                    return user;
+            }
+
+            return default;
         }
     }
 }

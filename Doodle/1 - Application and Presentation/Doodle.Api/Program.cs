@@ -3,6 +3,7 @@ using Doodle.Infrastructure.Repository.Extensions;
 using Doodle.Infrastructure.Security.Extensions;
 using Doodle.Services.Extensions;
 using Hellang.Middleware.ProblemDetails;
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -22,9 +23,49 @@ Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Staging");
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer()
-    .AddSwaggerGen()
-    .AddRepositoryInfrastructure(builder.Configuration)
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Protected API", Version = "v1" });
+
+    /*options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.OAuth2,
+        Flows = new OpenApiOAuthFlows
+        {
+            AuthorizationCode = new OpenApiOAuthFlow
+            {
+                AuthorizationUrl = new Uri("https://localhost:7077/connect/authorize"),
+                TokenUrl = new Uri("https://localhost:7077/connect/token"),
+                Scopes = new Dictionary<string, string>
+                {
+                    {"api1", "Demo API - full access"}
+                }
+            }
+        }
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="oauth2"
+                }
+            },
+            new string[]{}
+        }
+    });
+
+    options.DocumentFilter<AuthorizeCheckOperationFilter>();
+    options.OperationFilter<AuthorizeCheckOperationFilter>();*/
+});
+
+builder.Services.AddRepositoryInfrastructure(builder.Configuration)
     .AddSecurity(builder.Configuration)
     .AddServices()
 
@@ -48,7 +89,14 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage()
         .UseDatabaseExceptionFilter()
         .UseSwagger()
-        .UseSwaggerUI();
+        .UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger", "Doodle API V1");
+
+            /*options.OAuthClientId("demo_api_swagger");
+            options.OAuthAppName("Demo API - Swagger");
+            options.OAuthUsePkce();*/
+        });
 }
 else
 {

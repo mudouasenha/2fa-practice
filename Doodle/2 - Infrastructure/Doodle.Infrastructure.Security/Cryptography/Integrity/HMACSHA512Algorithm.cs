@@ -12,36 +12,30 @@ namespace Doodle.Infrastructure.Security.Cryptography.Integrity
             using RandomNumberGenerator rng = RandomNumberGenerator.Create();
             rng.GetBytes(secretkey);
 
-            HashData(secretkey, data.ToByteArray());
+            var hash = HashData(secretkey, data);
 
-            VerifyHash(secretkey, data.ToByteArray());
+            VerifyHash(secretkey, data, hash.AsHexadecimalString());
         }
 
-        public static string HashData(byte[] key, byte[] sourceFile)
+        public static byte[] HashData(byte[] key, string data)
         {
+            var byteArrData = data.ToByteArray();
+
             using HMACSHA512 hmac = new(key);
-            byte[] hashValue = hmac.ComputeHash(sourceFile);
+            byte[] hashValue = hmac.ComputeHash(byteArrData);
 
-            return hashValue.ToString();
+            return hashValue;
         }
 
-        public static bool VerifyHash(byte[] key, byte[] inputData)
+        public static bool VerifyHash(byte[] key, string data, string hashToVerify)
         {
-            bool err = false;
-            using (HMACSHA512 hmac = new(key))
-            {
-                byte[] storedHash = new byte[hmac.HashSize / 8];
+            var byteArrData = data.ToByteArray();
+            var storedHash = hashToVerify.FromHexStringToByteArray();
 
-                byte[] computedHash = hmac.ComputeHash(inputData);
+            HMACSHA512 hmac = new(key);
+            byte[] computedHash = hmac.ComputeHash(byteArrData);
 
-                for (int i = 0; i < storedHash.Length; i++)
-                    if (computedHash[i] != storedHash[i])
-                        err = true;
-            }
-            if (err)
-                return false;
-            else
-                return true;
+            return storedHash.CompareWith(computedHash);
         }
     }
 }

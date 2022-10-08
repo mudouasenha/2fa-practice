@@ -2,6 +2,7 @@
 
 namespace Doodle.Infrastructure.Security.Cryptography.Confidentiality.Symmetric
 {
+    // TODO: CHANGE FROM UTF-8 TO HEXADECIMAL
     public class AesSymmetricEncryption
     {
         public static void Main(string data)

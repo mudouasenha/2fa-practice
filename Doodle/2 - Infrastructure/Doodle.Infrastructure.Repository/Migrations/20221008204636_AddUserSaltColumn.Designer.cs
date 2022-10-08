@@ -4,6 +4,7 @@ using Doodle.Infrastructure.Repository.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doodle.Infrastructure.Repository.Migrations
 {
     [DbContext(typeof(DoodleDbContext))]
-    partial class DoodleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221008204636_AddUserSaltColumn")]
+    partial class AddUserSaltColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,8 +51,8 @@ namespace Doodle.Infrastructure.Repository.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -67,8 +69,8 @@ namespace Doodle.Infrastructure.Repository.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("varchar(64)");
+                        .HasMaxLength(16)
+                        .HasColumnType("varchar(16)");
 
                     b.HasKey("Id");
 

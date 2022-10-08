@@ -34,5 +34,7 @@ namespace Doodle.Infrastructure.Repository.Repositories
 
         public async Task<bool> ExistsByEmail(string email) => await dbSet.AsQueryable().AsNoTracking()
             .AnyAsync(p => p.Email.Equals(email));
+
+        public async Task<List<User>> GetAll() => await dbSet.AsQueryable().AsNoTracking().ToListAsync();
     }
 }

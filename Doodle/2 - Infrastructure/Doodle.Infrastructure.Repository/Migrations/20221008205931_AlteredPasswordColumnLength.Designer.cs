@@ -4,6 +4,7 @@ using Doodle.Infrastructure.Repository.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doodle.Infrastructure.Repository.Migrations
 {
     [DbContext(typeof(DoodleDbContext))]
-    partial class DoodleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221008205931_AlteredPasswordColumnLength")]
+    partial class AlteredPasswordColumnLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

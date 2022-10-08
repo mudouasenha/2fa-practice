@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Secur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Api", "1 - Application and Presentation\Doodle.Api\Doodle.Api.csproj", "{0BB4562E-CE56-476B-96B5-BDE5075BA126}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Presentation", "5 - Presentation (not yet used)\Doodle.Presentation\Doodle.Presentation.csproj", "{081A830E-6186-4D03-B1DE-4C4BD3D58AA9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,10 +49,6 @@ Global
 		{0BB4562E-CE56-476B-96B5-BDE5075BA126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BB4562E-CE56-476B-96B5-BDE5075BA126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BB4562E-CE56-476B-96B5-BDE5075BA126}.Release|Any CPU.Build.0 = Release|Any CPU
-		{081A830E-6186-4D03-B1DE-4C4BD3D58AA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{081A830E-6186-4D03-B1DE-4C4BD3D58AA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{081A830E-6186-4D03-B1DE-4C4BD3D58AA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{081A830E-6186-4D03-B1DE-4C4BD3D58AA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,7 +59,6 @@ Global
 		{2D129C53-76D6-41FD-98CB-226F5A648953} = {6A20B60F-82C5-41F4-BC2B-1FE3967EECC6}
 		{88C14446-3966-481A-9BC3-F7CADB02CDBE} = {6A20B60F-82C5-41F4-BC2B-1FE3967EECC6}
 		{0BB4562E-CE56-476B-96B5-BDE5075BA126} = {4FD660DE-C477-4D22-9FB7-26D2B13872A4}
-		{081A830E-6186-4D03-B1DE-4C4BD3D58AA9} = {DE80DA8A-A530-495E-9BD4-8701B7DB7939}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1757F602-FEC3-4FC4-BAA2-9D05683BA087}

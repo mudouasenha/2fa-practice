@@ -1,11 +1,6 @@
 ﻿using Doodle.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Doodle.Infrastructure.Repository.Data.Configs
 {
@@ -22,8 +17,9 @@ namespace Doodle.Infrastructure.Repository.Data.Configs
             builder.Property(p => p.Name).HasColumnType("varchar").HasMaxLength(70).IsRequired();
             builder.Property(p => p.Email).HasColumnType("varchar").HasMaxLength(62).IsRequired();
             builder.Property(p => p.PhoneNumber).HasColumnType("varchar").HasMaxLength(15).IsRequired();
-            builder.Property(p => p.Username).HasColumnType("varchar").HasMaxLength(16).IsRequired();
-            builder.Property(p => p.Password).HasColumnType("varchar").HasMaxLength(64).IsRequired();
+            builder.Property(p => p.Username).HasColumnType("varchar").HasMaxLength(64).IsRequired();
+            builder.Property(p => p.Password).HasColumnType("varchar").HasMaxLength(255).IsRequired();
+            builder.Property(p => p.Salt).HasColumnType("varchar").HasMaxLength(64).IsRequired();
             builder.Property(p => p.CreatedAt).HasColumnType("datetime").IsRequired();
             builder.Property(p => p.UpdatedAt).HasColumnType("datetime");
 

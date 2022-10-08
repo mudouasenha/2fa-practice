@@ -1,6 +1,7 @@
 ﻿using Doodle.Domain.Entities;
 using Doodle.Infrastructure.Repository.Repositories.Abstractions;
 using Doodle.Services.Common;
+using Doodle.Services.Security.Abstractions;
 using Doodle.Services.Users.Abstractions;
 using Doodle.Services.Users.Models;
 
@@ -9,10 +10,12 @@ namespace Doodle.Services.Users
     public class UsersService : IUsersService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ICryptoService _cryptoService;
 
-        public UsersService(IUserRepository userRepository)
+        public UsersService(IUserRepository userRepository, ICryptoService cryptoService)
         {
             _userRepository = userRepository;
+            _cryptoService = cryptoService;
         }
 
         public async Task<Result<User>> DeleteUser(UserFilterDTO input)
@@ -34,14 +37,17 @@ namespace Doodle.Services.Users
             if (userFromRepository)
                 throw new Exception("User Already Exists");
 
+            var encryptionData = _cryptoService.GenerateUserEncryptionData(input.Username, input.Password);
+
             var user = new User()
             {
                 Name = input.Name,
                 Address = input.Address,
                 Email = input.Email,
-                Password = input.Password,
+                Password = encryptionData.EncryptedPassword,
                 PhoneNumber = input.PhoneNumber,
-                Username = input.Username,
+                Salt = encryptionData.Salt,
+                Username = encryptionData.EncryptedUsername,
                 CreatedAt = DateTime.Now
             };
 
@@ -52,8 +58,14 @@ namespace Doodle.Services.Users
 
         public async Task<Result<User>> SignIn(UserSignInInput input)
         {
-            var userFromRepository = await _userRepository.GetByUsername(input.Username);
-            return new Result<User>(new User(), "Signed in Successfully", true);
+            var usersFromRepository = await _userRepository.GetAll();
+
+            var userLoggedIn = _cryptoService.VerifyLogin(usersFromRepository, input.Username, input.Password);
+
+            if (userLoggedIn != default)
+                return new Result<User>(userLoggedIn, "Signed in Successfully.", true);
+
+            return new Result<User>(default, "Could not log in. Please verify your credentials.", false);
         }
 
         public async Task<Result<User>> SignOut(UserSignOutInput input)

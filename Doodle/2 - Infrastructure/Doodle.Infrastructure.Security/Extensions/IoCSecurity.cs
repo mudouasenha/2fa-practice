@@ -17,6 +17,7 @@ namespace Doodle.Infrastructure.Security.Extensions
 
             services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
+                .AddUserManager<ApplicationIdentityUserManager>()
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<DoodleDbContext>().AddDefaultTokenProviders();
 
