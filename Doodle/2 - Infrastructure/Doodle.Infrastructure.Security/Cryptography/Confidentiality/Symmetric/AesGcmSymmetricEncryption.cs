@@ -25,9 +25,6 @@ namespace Doodle.Infrastructure.Security.Cryptography.Confidentiality.Symmetric
             gcm.Decrypt(aes.IV, cyphertext, tag, decypherText, associatedData);
         }
 
-        //public void Encrypt(string plainText, byte[] Key, byte[] IV)
-
-        //AES CRYPTO AUTENTICADA
         public static string Encrypt(string plain, byte[] Key, byte[] nonce)
         {
             //IV DEVE TER 12 BYTES
@@ -48,6 +45,7 @@ namespace Doodle.Infrastructure.Security.Cryptography.Confidentiality.Symmetric
             // Copy parameters
             BinaryPrimitives.WriteInt32LittleEndian(encryptedData[..4], nonceSize);
             BinaryPrimitives.WriteInt32LittleEndian(encryptedData.Slice(4 + nonceSize, 4), tagSize);
+
             //var nonce = encryptedData.Slice(4, nonceSize);
             var tag = encryptedData.Slice(4 + nonceSize + 4, tagSize);
             var cipherBytes = encryptedData.Slice(4 + nonceSize + 4 + tagSize, cipherSize);
@@ -86,8 +84,5 @@ namespace Doodle.Infrastructure.Security.Cryptography.Confidentiality.Symmetric
             // Convert plain bytes back into string
             return Encoding.UTF8.GetString(plainBytes);
         }
-
-        public void Decrypt(byte[] cipherText, byte[] Key, byte[] IV)
-        { }
     }
 }
