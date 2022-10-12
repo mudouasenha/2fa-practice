@@ -10,6 +10,12 @@
 
         public string Email { get; set; }
 
+        public bool MfaEnabled { get; set; }
+
+        public bool Verified { get; set; }
+
+        public string MfaIdentity { get; set; }
+
         public string Password { get; set; }
 
         public string Salt { get; set; }

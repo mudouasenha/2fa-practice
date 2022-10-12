@@ -20,6 +20,9 @@ namespace Doodle.Infrastructure.Repository.Data.Configs
             builder.Property(p => p.Username).HasColumnType("varchar").HasMaxLength(64).IsRequired();
             builder.Property(p => p.Password).HasColumnType("varchar").HasMaxLength(255).IsRequired();
             builder.Property(p => p.Salt).HasColumnType("varchar").HasMaxLength(64).IsRequired();
+            builder.Property(p => p.MfaEnabled).HasColumnType("bit").IsRequired().HasDefaultValue(false);
+            builder.Property(p => p.Verified).HasColumnType("bit").IsRequired().HasDefaultValue(false);
+            builder.Property(p => p.MfaIdentity).HasColumnType("varchar").HasMaxLength(36);
             builder.Property(p => p.CreatedAt).HasColumnType("datetime").IsRequired();
             builder.Property(p => p.UpdatedAt).HasColumnType("datetime");
 

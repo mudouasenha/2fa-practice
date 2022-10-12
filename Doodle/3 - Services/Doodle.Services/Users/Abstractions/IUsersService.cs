@@ -1,11 +1,6 @@
 ﻿using Doodle.Domain.Entities;
 using Doodle.Services.Common;
 using Doodle.Services.Users.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Doodle.Services.Users.Abstractions
 {
@@ -16,6 +11,8 @@ namespace Doodle.Services.Users.Abstractions
         Task<Result<User>> SignIn(UserSignInInput input);
 
         Task<Result<User>> SignOut(UserSignOutInput input);
+
+        Task<User> VerifyUser(UserVerifyInput input);
 
         Task<Result<User>> DeleteUser(UserFilterDTO input);
 

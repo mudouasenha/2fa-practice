@@ -1,5 +1,6 @@
 ﻿using Doodle.Domain.Entities;
 using Doodle.Infrastructure.Repository.Repositories.Abstractions;
+using Doodle.Infrastructure.Security.MultiFactorAuthentication;
 using Doodle.Services.Common;
 using Doodle.Services.Security.Abstractions;
 using Doodle.Services.Users.Abstractions;
@@ -10,12 +11,14 @@ namespace Doodle.Services.Users
     public class UsersService : IUsersService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IVerification _verification;
         private readonly ICryptoService _cryptoService;
 
-        public UsersService(IUserRepository userRepository, ICryptoService cryptoService)
+        public UsersService(IUserRepository userRepository, ICryptoService cryptoService, IVerification verification)
         {
             _userRepository = userRepository;
             _cryptoService = cryptoService;
+            _verification = verification;
         }
 
         public async Task<Result<User>> DeleteUser(UserFilterDTO input)
@@ -62,10 +65,18 @@ namespace Doodle.Services.Users
 
             var userLoggedIn = _cryptoService.VerifyLogin(usersFromRepository, input.Username, input.Password);
 
-            if (userLoggedIn != default)
-                return new Result<User>(userLoggedIn, "Signed in Successfully.", true);
+            if (userLoggedIn == default)
+                return new Result<User>(default, "Could not log in. Please verify your credentials.", false);
 
-            return new Result<User>(default, "Could not log in. Please verify your credentials.", false);
+            if (!userLoggedIn.Verified)
+                return new Result<User>(default, "Your user is not authenticated via TOTP. Please authenticate in /api/verify", false);
+
+            var verificationResult = await _verification.CheckVerificationAsync(userLoggedIn, input.TotpCode);
+
+            if (!verificationResult.IsValid)
+                return new Result<User>(default, string.Join(", ", verificationResult.Errors), false);
+
+            return new Result<User>(userLoggedIn, "Signed in Successfully.", true);
         }
 
         public async Task<Result<User>> SignOut(UserSignOutInput input)
@@ -87,6 +98,18 @@ namespace Doodle.Services.Users
             var userUpdated = await _userRepository.Update(userFromRepository);
 
             return new Result<User>(userUpdated, "Password Updated Successfully", true);
+        }
+
+        public async Task<User> VerifyUser(UserVerifyInput input)
+        {
+            var userResult = await SignIn(new UserSignInInput() { Username = input.Username, Password = input.Password });
+
+            var user = userResult.Data;
+            user.Verified = true;
+
+            await _userRepository.Update(user);
+
+            return user;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Doodle.Infrastructure.Repository.Data.Contexts;
 using Doodle.Infrastructure.Security.Models.Options;
+using Doodle.Infrastructure.Security.MultiFactorAuthentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,8 @@ namespace Doodle.Infrastructure.Security.Extensions
         public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration config)
         {
             services.Configure<OpenIdConnectKeyOptions>(opt => config.GetSection(nameof(OpenIdConnectKeyOptions)).Bind(opt));
+            services.Configure<TwilioOptions>(opt => config.GetSection(nameof(TwilioOptions)).Bind(opt));
+
             services.AddCors();
 
             services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -22,6 +25,7 @@ namespace Doodle.Infrastructure.Security.Extensions
                 .AddEntityFrameworkStores<DoodleDbContext>().AddDefaultTokenProviders();
 
             services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, AdditionalUserClaimsPrincipalFactory>();
+            services.AddScoped<IVerification, Twilio2FAVerifyService>();
 
             services.AddAuthorization(options =>
             {
