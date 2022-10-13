@@ -2,11 +2,6 @@
 using Doodle.Infrastructure.Repository.Data.Contexts;
 using Doodle.Infrastructure.Repository.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Doodle.Infrastructure.Repository.Repositories
 {
@@ -41,6 +36,8 @@ namespace Doodle.Infrastructure.Repository.Repositories
 
         public async Task<TEntity> Update(TEntity entity)
         {
+            dbContext.ChangeTracker.Clear();
+
             dbSet.Update(entity);
             await dbContext.SaveChangesAsync();
             return entity;
@@ -49,5 +46,17 @@ namespace Doodle.Infrastructure.Repository.Repositories
         public virtual IQueryable<TEntity> AsQueryable() => dbSet;
 
         public async Task<TEntity> SelectById(int id) => await dbSet.AsQueryable().AsNoTracking().FirstOrDefaultAsync(p => p.Id.Equals(id));
+
+        public async Task ClearChangeTrackers()
+        {
+            var changedEntriesCopy = dbContext.ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added ||
+                            e.State == EntityState.Modified ||
+                            e.State == EntityState.Deleted)
+                .ToList();
+
+            foreach (var entry in changedEntriesCopy)
+                entry.State = EntityState.Detached;
+        }
     }
 }

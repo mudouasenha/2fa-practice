@@ -1,10 +1,11 @@
 ﻿using Doodle.Domain.Entities;
 using Doodle.Infrastructure.Security.Models.Options;
+using Doodle.Infrastructure.Security.MultiFactorAuthentication.Abstractions;
+using Doodle.Infrastructure.Security.MultiFactorAuthentication.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Twilio;
 using Twilio.Exceptions;
-using Twilio.Rest.Verify.V2.Service;
 using Twilio.Rest.Verify.V2.Service.Entity;
 
 namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
@@ -21,7 +22,68 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
             TwilioClient.Init(_twilioOptions.Value.AccountSid, _twilioOptions.Value.AuthToken);
         }
 
-        public async Task<string> CreateVerificationResource(User user)
+        public async Task<VerificationResult> VerifyResource(User user, string payload)
+        {
+            var factors = await ReadResource(user);
+            var totpFactor = factors.FirstOrDefault(p => p.FactorType == FactorResource.FactorTypesEnum.Totp);
+
+            var factor = FactorResource.Update(
+                authPayload: payload,
+                pathServiceSid: _twilioOptions.Value.ServiceSid,
+                pathIdentity: user.MfaIdentity,
+                pathSid: totpFactor.Sid
+            );
+
+            return factor.Status.Equals(FactorResource.FactorStatusesEnum.Verified) ?
+                new VerificationResult(factor.Status.ToString()) :
+                new VerificationResult(new List<string> { "Wrong code. Try again." });
+        }
+
+        public async Task<(VerificationResult, string)> StartVerificationAsync(User user)
+        {
+            try
+            {
+                if (user.MfaIdentity != default)
+                    return (new VerificationResult(new List<string> { "Already created" }), user.MfaIdentity);
+
+                var (resource, userIdentity) = await CreateVerificationResource();
+
+                return (new VerificationResult(resource.Binding), userIdentity);
+            }
+            catch (TwilioException e)
+            {
+                return (new VerificationResult(new List<string> { e.Message }), user.MfaIdentity);
+            }
+        }
+
+        public async Task<VerificationResult> CheckVerificationAsync(User user, string code)
+        {
+            try
+            {
+                var factors = await ReadResource(user);
+                var totpFactor = factors.FirstOrDefault(p => p.FactorType == FactorResource.FactorTypesEnum.Totp);
+
+                if (totpFactor == default)
+                    return new VerificationResult(new List<string> { "No Totp factor found." });
+
+                var challenge = ChallengeResource.Create(
+                    authPayload: code,
+                    factorSid: totpFactor.Sid,
+                    pathServiceSid: _twilioOptions.Value.ServiceSid,
+                    pathIdentity: user.MfaIdentity
+                );
+
+                return challenge.Status.Equals(ChallengeResource.ChallengeStatusesEnum.Approved) ?
+                    new VerificationResult(challenge.Status.ToString()) :
+                    new VerificationResult(new List<string> { "Wrong code. Try again." });
+            }
+            catch (Exception e)
+            {
+                return new VerificationResult(new List<string> { e.Message });
+            }
+        }
+
+        private async Task<(NewFactorResource, string)> CreateVerificationResource()
         {
             TwilioClient.Init(_twilioOptions.Value.AccountSid, _twilioOptions.Value.AuthToken);
 
@@ -35,7 +97,7 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
                 );
 
             _logger.LogInformation(verification.Binding.ToString());
-            return userIdentity;
+            return (verification, userIdentity);
         }
 
         private async Task<List<FactorResource>> ReadResource(User user)
@@ -50,96 +112,5 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
 
             return factors.ToList();
         }
-
-        public async Task<bool> VerifyResource(User user, string payload)
-        {
-            TwilioClient.Init(_twilioOptions.Value.AccountSid, _twilioOptions.Value.AuthToken);
-
-            var factors = await ReadResource(user);
-            foreach (var record in factors)
-            {
-                var factor = FactorResource.Update(
-                    authPayload: payload,
-                    pathServiceSid: _twilioOptions.Value.ServiceSid,
-                    pathIdentity: user.MfaIdentity,
-                    pathSid: record.Sid
-                );
-
-                //return verificationCheckResource.Status.Equals("approved") ?
-                //    new VerificationResult(verificationCheckResource.Sid) :
-                //    new VerificationResult(new List<string> { "Wrong code. Try again." });
-            }
-
-            return false;
-        }
-
-        public async Task<VerificationResult> StartVerificationAsync(User user, string channel)
-        {
-            try
-            {
-                var factors = await ReadResource(user);
-
-                var verificationResource = await VerificationResource.CreateAsync(
-                    to: user.PhoneNumber,
-                    channel: channel,
-                    pathServiceSid: _twilioOptions.Value.ServiceSid
-                );
-
-                return new VerificationResult(verificationResource.Sid);
-            }
-            catch (TwilioException e)
-            {
-                return new VerificationResult(new List<string> { e.Message });
-            }
-        }
-
-        public async Task<VerificationResult> CheckVerificationAsync(User user, string code)
-        {
-            try
-            {
-                var challenge = ChallengeResource.Create(
-                    authPayload: code,
-                    factorSid: "YFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-                    pathServiceSid: _twilioOptions.Value.ServiceSid,
-                    pathIdentity: user.MfaIdentity
-                );
-
-                return challenge.Status.Equals("approved") ?
-                    new VerificationResult(challenge.Sid) :
-                    new VerificationResult(new List<string> { "Wrong code. Try again." });
-            }
-            catch (Exception e)
-            {
-                return new VerificationResult(new List<string> { e.Message });
-            }
-        }
-    }
-
-    public interface IVerification
-    {
-        Task<VerificationResult> StartVerificationAsync(User user, string channel);
-
-        Task<VerificationResult> CheckVerificationAsync(User user, string code);
-    }
-
-    public class VerificationResult
-    {
-        public VerificationResult(string sid)
-        {
-            Sid = sid;
-            IsValid = true;
-        }
-
-        public VerificationResult(List<string> errors)
-        {
-            Errors = errors;
-            IsValid = false;
-        }
-
-        public bool IsValid { get; set; }
-
-        public string Sid { get; set; }
-
-        public List<string> Errors { get; set; }
     }
 }

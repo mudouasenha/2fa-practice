@@ -1,6 +1,7 @@
 ﻿using Doodle.Infrastructure.Repository.Data.Contexts;
 using Doodle.Infrastructure.Security.Models.Options;
 using Doodle.Infrastructure.Security.MultiFactorAuthentication;
+using Doodle.Infrastructure.Security.MultiFactorAuthentication.Abstractions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;

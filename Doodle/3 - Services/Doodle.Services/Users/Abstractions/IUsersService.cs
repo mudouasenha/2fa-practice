@@ -14,6 +14,12 @@ namespace Doodle.Services.Users.Abstractions
 
         Task<User> VerifyUser(UserVerifyInput input);
 
+        Task<User> UnverifyUser(string username, string password);
+
+        Task<User> UpdateMfa(UserVerifyInput input);
+
+        Task<User> GetByCredentials(string username, string password);
+
         Task<Result<User>> DeleteUser(UserFilterDTO input);
 
         Task<Result<User>> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword);

@@ -36,5 +36,17 @@ namespace Doodle.Infrastructure.Repository.Repositories
             .AnyAsync(p => p.Email.Equals(email));
 
         public async Task<List<User>> GetAll() => await dbSet.AsQueryable().AsNoTracking().ToListAsync();
+
+        public async Task ClearChangeTrackers()
+        {
+            var changedEntriesCopy = dbContext.ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added ||
+                            e.State == EntityState.Modified ||
+                            e.State == EntityState.Deleted)
+                .ToList();
+
+            foreach (var entry in changedEntriesCopy)
+                entry.State = EntityState.Detached;
+        }
     }
 }

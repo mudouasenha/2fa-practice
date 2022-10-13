@@ -1,16 +1,15 @@
 ﻿using Doodle.Api.Controllers.Models;
-using Doodle.Infrastructure.Security.MultiFactorAuthentication;
+using Doodle.Infrastructure.Security.MultiFactorAuthentication.Abstractions;
+using Doodle.Infrastructure.Security.MultiFactorAuthentication.Models;
 using Doodle.Services.Users.Abstractions;
 using Doodle.Services.Users.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doodle.Api.Controllers
 {
-    [Authorize]
-    [Produces("application/json")]
-    [Route("api/Verify")]
-    public class VerifyController : Controller
+    [ApiController]
+    [Route("api/[Controller]")]
+    public class VerifyController : ControllerBase
     {
         private readonly ILogger<VerifyController> _logger;
         private readonly IVerification _verification;
@@ -48,21 +47,42 @@ namespace Doodle.Api.Controllers
         [HttpPost("first")]
         public async Task<VerificationResult> FirstAuth(UserVerifyInputModel inputModel)
         {
-            var signInInput = new UserSignInInput() { Username = inputModel.Username, Password = inputModel.Password };
+            var user = await _usersService.GetByCredentials(inputModel.Username, inputModel.Password);
 
-            var result = await _usersService.SignIn(signInInput);
-
-            if (result.Data == default)
+            if (user == default)
                 return new VerificationResult(new List<string> { "User not Found." });
 
-            if (!result.Data.Verified)
-            {
-                return await _verification.StartVerificationAsync(result.Data, "totp");
-            }
+            //var userUnverified = await _usersService.UnVerifyUser(inputModel.Username, inputModel.Password);
 
-            await _usersService.VerifyUser(UserVerifyInputModel.ToInput(inputModel));
+            if (user.Verified)
+                return new VerificationResult(new List<string> { "Your totp is already verified." });
 
-            return new VerificationResult(new List<string> { "Your totp is already verified." });
+            var toInput = UserVerifyInputModel.ToInput(inputModel);
+            var verificationResult = await _verification.VerifyResource(user, inputModel.Code);
+
+            await _usersService.VerifyUser(toInput);
+
+            return verificationResult;
+        }
+
+        [HttpGet("first")]
+        public async Task<VerificationResult> GetFirstAuth(UserVerifyInputModel inputModel)
+        {
+            var user = await _usersService.GetByCredentials(inputModel.Username, inputModel.Password);
+
+            if (user == default)
+                return new VerificationResult(new List<string> { "User not Found." });
+
+            if (user.Verified)
+                return new VerificationResult(new List<string> { "Your totp is already verified." });
+
+            var toInput = UserVerifyInputModel.ToInput(inputModel);
+            var (verificationResult, userId) = await _verification.StartVerificationAsync(user);
+            toInput.MfaExternalId = userId;
+
+            await _usersService.UpdateMfa(toInput);
+
+            return verificationResult;
         }
     }
 }

@@ -4,6 +4,8 @@ namespace Doodle.Infrastructure.Repository.Repositories.Abstractions
 {
     public interface IUserRepository : IRepository<User>
     {
+
+        Task ClearChangeTrackers();
         Task<User> GetByEmail(string email);
 
         Task<List<User>> GetAll();
