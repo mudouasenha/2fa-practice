@@ -66,6 +66,20 @@ namespace Doodle.Infrastructure.Security.Extensions
                 };
             });
 
+            services.ConfigureSecurity();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureSecurity(this IServiceCollection services)
+        {
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 8;
+            });
+
             return services;
         }
     }

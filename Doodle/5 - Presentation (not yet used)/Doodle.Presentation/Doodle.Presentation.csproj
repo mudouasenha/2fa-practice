@@ -4,13 +4,11 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<OutputType>Exe</OutputType>
-		<StartupObject>Microsoft.VisualStudio.Web.CodeGeneration.Design.Program</StartupObject>
 	</PropertyGroup>
 
 	<ItemGroup>
 
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
 		<PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
 		<PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />

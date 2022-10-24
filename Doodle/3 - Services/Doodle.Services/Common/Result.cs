@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Doodle.Services.Common
+﻿namespace Doodle.Services.Common
 {
     public class Result<T> : IResult<T>, IResult
     {
@@ -30,6 +24,10 @@ namespace Doodle.Services.Common
             Message = message;
             Success = success;
         }
+
+        public static Result<T> Fail(string message) => new(message, false);
+
+        public static Result<T> Successful(T data, string message) => new(data, message, true);
     }
 
     public interface IResult<out T> : IResult

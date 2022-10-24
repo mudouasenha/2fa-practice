@@ -1,9 +1,9 @@
 ﻿using Doodle.Domain.Extensions;
 using Replicon.Cryptography.SCrypt;
 
-namespace Doodle.Infrastructure.Security.Cryptography.Confidentiality.Symmetric
+namespace Doodle.Infrastructure.Security.Cryptography.SecureKeyDerivation
 {
-    public class ScryptSymmetricEncryption
+    public class ScryptKDF
     {
         public static string Encrypt(string plain, byte[] salt)
         {

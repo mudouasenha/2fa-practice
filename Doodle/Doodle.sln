@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Infrastructure.Secur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Api", "1 - Application and Presentation\Doodle.Api\Doodle.Api.csproj", "{0BB4562E-CE56-476B-96B5-BDE5075BA126}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Doodle.Presentation", "5 - Presentation (not yet used)\Doodle.Presentation\Doodle.Presentation.csproj", "{739BB4EA-6436-4FC3-A230-65FF59D4FEFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle.Api.Auth", "1 - Application and Presentation\Doodle.Api.Auth\Doodle.Api.Auth.csproj", "{E9233EAC-3FBC-4E2C-9324-A85ABB900D3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,14 @@ Global
 		{0BB4562E-CE56-476B-96B5-BDE5075BA126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BB4562E-CE56-476B-96B5-BDE5075BA126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BB4562E-CE56-476B-96B5-BDE5075BA126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{739BB4EA-6436-4FC3-A230-65FF59D4FEFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{739BB4EA-6436-4FC3-A230-65FF59D4FEFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{739BB4EA-6436-4FC3-A230-65FF59D4FEFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{739BB4EA-6436-4FC3-A230-65FF59D4FEFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9233EAC-3FBC-4E2C-9324-A85ABB900D3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9233EAC-3FBC-4E2C-9324-A85ABB900D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9233EAC-3FBC-4E2C-9324-A85ABB900D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9233EAC-3FBC-4E2C-9324-A85ABB900D3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +71,8 @@ Global
 		{2D129C53-76D6-41FD-98CB-226F5A648953} = {6A20B60F-82C5-41F4-BC2B-1FE3967EECC6}
 		{88C14446-3966-481A-9BC3-F7CADB02CDBE} = {6A20B60F-82C5-41F4-BC2B-1FE3967EECC6}
 		{0BB4562E-CE56-476B-96B5-BDE5075BA126} = {4FD660DE-C477-4D22-9FB7-26D2B13872A4}
+		{739BB4EA-6436-4FC3-A230-65FF59D4FEFF} = {DE80DA8A-A530-495E-9BD4-8701B7DB7939}
+		{E9233EAC-3FBC-4E2C-9324-A85ABB900D3E} = {4FD660DE-C477-4D22-9FB7-26D2B13872A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1757F602-FEC3-4FC4-BAA2-9D05683BA087}

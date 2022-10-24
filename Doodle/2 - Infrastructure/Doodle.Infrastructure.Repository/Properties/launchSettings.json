@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Doodle.Infrastructure.Repository": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:59957;http://localhost:59958"
+    }
+  }
+}

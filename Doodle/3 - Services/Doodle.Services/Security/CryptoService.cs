@@ -102,7 +102,7 @@ namespace Doodle.Services.Security
             var derivedPassword = PKBDF2KeyDerivation.DeriveKey(password, salt);
 
             var encryptedPassword = AesGcmSymmetricEncryption.Encrypt(password, derivedPassword, iv);
-            var encryptedUsername = ScryptSymmetricEncryption.Encrypt(username, salt);
+            var encryptedUsername = ScryptKDF.Encrypt(username, salt);
 
             return new UserEncryptedData
             {
@@ -122,7 +122,7 @@ namespace Doodle.Services.Security
                 var derivedPassword = PKBDF2KeyDerivation.DeriveKey(password, salt);
 
                 var encryptedPassword = AesGcmSymmetricEncryption.Encrypt(password, derivedPassword, iv);
-                var hasEqualUsername = ScryptSymmetricEncryption.VerifyEncrypt(username, salt, user.Username);
+                var hasEqualUsername = ScryptKDF.VerifyEncrypt(username, salt, user.Username);
 
                 var hasEqualPassword = string.Equals(encryptedPassword, user.Password);
                 if (hasEqualUsername & hasEqualPassword)

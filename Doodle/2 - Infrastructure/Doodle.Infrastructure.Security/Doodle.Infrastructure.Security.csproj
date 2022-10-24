@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Replicon.Cryptography.SCrypt" Version="1.1.6.13" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.24.0" />
     <PackageReference Include="Twilio" Version="5.80.1" />
   </ItemGroup>
 
@@ -21,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Cryptography\Confidentiality\Asymmetric\" />
-    <Folder Include="Cryptography\Authenticity\" />
   </ItemGroup>
 
 
