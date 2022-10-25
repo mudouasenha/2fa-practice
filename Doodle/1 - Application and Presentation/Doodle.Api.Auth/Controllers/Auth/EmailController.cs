@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace Doodle.Api.Auth.Controllers.Auth
 {
@@ -19,17 +21,24 @@ namespace Doodle.Api.Auth.Controllers.Auth
         }
 
         [HttpPost("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, string code)
+        public async Task<IActionResult> ConfirmEmail([FromQuery] AccountActivationInputModel input)
         {
             try
             {
-                var user = await _userManager.FindByIdAsync(userId);
-                if (user == null)
-                    return NotFound($"Unable to load user with ID '{userId}'.");
+                var normalizedCode = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(input.Code));
+                var result = await _userManager.ActivateAccount(input.UserId, normalizedCode);
 
-                //code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-                var result = await _userManager.ConfirmEmailAsync(user, code);
-                return result.Succeeded ? Ok("Thank you for confirming your email.") : BadRequest("Error confirming your email.");
+                if (!result.Success)
+                    return BadRequest(result.Message);
+
+                return Ok(result.Message);
+                //var user = await _userManager.FindByIdAsync(userId);
+                //if (user == null)
+                //    return NotFound($"Unable to load user with ID '{userId}'.");
+
+                ////code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+                //var result = await _userManager.ConfirmEmailAsync(user, code);
+                //return result.Succeeded ? Ok("Thank you for confirming your email.") : BadRequest("Error confirming your email.");
             }
             catch (Exception ex)
             {
@@ -39,25 +48,25 @@ namespace Doodle.Api.Auth.Controllers.Auth
         }
 
         [HttpPost("change-email")]
-        public async Task<IActionResult> ChangeEmail([FromQuery] string userId, string email, string code)
+        public async Task<IActionResult> ChangeEmail([FromQuery] ChangeEmailInputModel input)
         {
             try
             {
-                if (userId == null || email == null || code == null)
+                if (input.UserId == null || input.Email == null || input.Code == null)
                     return BadRequest("Please fill all .");
 
-                var user = await _userManager.FindByIdAsync(userId);
+                var user = await _userManager.FindByIdAsync(input.UserId);
                 if (user == null)
-                    return NotFound($"Unable to load user with ID '{userId}'.");
+                    return NotFound($"Unable to load user with ID '{input.UserId}'.");
 
                 //code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-                var result = await _userManager.ChangeEmailAsync(user, email, code);
+                var result = await _userManager.ChangeEmailAsync(user, input.Email, input.Code);
                 if (!result.Succeeded)
                     BadRequest("Error changing email.");
 
                 // In our UI email and user name are one and the same, so when we update the email
                 // we need to update the user name.
-                var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
+                var setUserNameResult = await _userManager.SetUserNameAsync(user, input.Email);
                 if (!setUserNameResult.Succeeded)
                     BadRequest("Error changing user name.");
 
@@ -70,5 +79,21 @@ namespace Doodle.Api.Auth.Controllers.Auth
                 return Problem();
             }
         }
+    }
+
+    public class AccountActivationInputModel
+    {
+        public string UserId { get; set; }
+
+        public string Code { get; set; }
+    }
+
+    public class ChangeEmailInputModel
+    {
+        public string UserId { get; set; }
+
+        public string Email { get; set; }
+
+        public string Code { get; set; }
     }
 }

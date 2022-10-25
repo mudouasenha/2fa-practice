@@ -23,7 +23,8 @@ namespace Doodle.Infrastructure.Security.Extensions
                 .AddRoles<IdentityRole>()
                 .AddUserManager<ApplicationIdentityUserManager>()
                 .AddDefaultUI()
-                .AddEntityFrameworkStores<DoodleDbContext>().AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<DoodleDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, AdditionalUserClaimsPrincipalFactory>();
             services.AddScoped<IVerification, Twilio2FAVerifyService>();
@@ -78,6 +79,7 @@ namespace Doodle.Infrastructure.Security.Extensions
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 8;
+                options.SignIn.RequireConfirmedEmail = true;
             });
 
             return services;

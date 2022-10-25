@@ -67,8 +67,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddRepositoryInfrastructure(builder.Configuration)
     .AddSecurity(builder.Configuration)
-    .AddServices()
-
+    .AddServices(builder.Configuration)
     .Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
 var app = builder.Build();

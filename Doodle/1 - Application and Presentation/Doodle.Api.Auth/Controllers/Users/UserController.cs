@@ -4,7 +4,6 @@ using Doodle.Domain.Entities;
 using Doodle.Services.Common;
 using Doodle.Services.Users.Abstractions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doodle.Api.Auth.Controllers.Users
@@ -135,27 +134,12 @@ namespace Doodle.Api.Auth.Controllers.Users
             }
         }
 
-
         [HttpDelete("delete-account"), Authorize(Roles = RoleConstants.Admin)]
         public async Task<Result<User>> DeleteAccount()
         {
             throw new NotImplementedException("Not yet Implemented");
             //var result = await _usersService.DeleteUser(UserRegisterInputModel.ToInput(inputModel));
             //return result;
-        }
-
-        private IdentityUser CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<IdentityUser>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
-            }
         }
     }
 }

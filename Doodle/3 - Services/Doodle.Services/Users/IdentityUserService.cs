@@ -4,11 +4,11 @@ using Doodle.Services.Security;
 using Doodle.Services.Users.Abstractions;
 using Doodle.Services.Users.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Web;
 
 namespace Doodle.Services.Users
 {
@@ -20,7 +20,7 @@ namespace Doodle.Services.Users
         private readonly ITokenService _tokenService;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailSenderService _emailSender;
         private readonly IUsersService _usersService;
 
         public IdentityUserService(ILogger<IdentityUserService> logger,
@@ -29,7 +29,7 @@ namespace Doodle.Services.Users
                                    ITokenService tokenService,
                                    IUserStore<IdentityUser> userStore,
                                    IUserEmailStore<IdentityUser> emailStore,
-                                   IEmailSender emailSender,
+                                   IEmailSenderService emailSender,
                                    IUsersService usersService)
         {
             _logger = logger;
@@ -167,10 +167,24 @@ namespace Doodle.Services.Users
 
             var callbackUrl = new Uri($"https://localhost:7706/auth/confirm-email?userId={userId}&code={code}&area=Identity");
 
-            await _emailSender.SendEmailAsync(user.Email, "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl.ToString())}'>clicking here</a>.");
+            await _emailSender.SendEmailAsync(new List<string> { user.Email }, "Confirm your email",
+                $"Please confirm your account by <a href='{HttpUtility.UrlEncode(callbackUrl.ToString())}'>clicking here</a>.");
 
             return true;
+        }
+
+        public async Task<Result<bool>> ActivateAccount(string userId, string code)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return Result<bool>.Fail($"Unable to load user with ID '{userId}'.");
+
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+                return Result<bool>.Successful(true, "Thank you for confirming your email.");
+
+            return Result<bool>.Fail("Error confirming your email.");
         }
 
         private IdentityUser CreateUser()
