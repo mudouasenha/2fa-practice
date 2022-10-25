@@ -5,6 +5,7 @@ using Doodle.Services.Common;
 using Doodle.Services.Users.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Doodle.Api.Auth.Controllers.Users
 {
@@ -97,7 +98,7 @@ namespace Doodle.Api.Auth.Controllers.Users
         }
 
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] string tst)
+        public async Task<IActionResult> ForgotPassword([FromBody] PasswordRequestInput input)
         {
             try
             {
@@ -141,5 +142,21 @@ namespace Doodle.Api.Auth.Controllers.Users
             //var result = await _usersService.DeleteUser(UserRegisterInputModel.ToInput(inputModel));
             //return result;
         }
+
+    }
+
+    public class PasswordRequestInput
+    {
+        [Required]
+        public string Email { get; set; }
+        [DataType(DataType.Password)]
+        [Required]
+        public string Password { get; set; }
+        [DataType(DataType.Password)]
+        [Required]
+        [Compare("Password")]
+        public string RePassword { get; set; }
+        [Required]
+        public string Token { get; set; }
     }
 }

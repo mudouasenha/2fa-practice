@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Web;
 
 namespace Doodle.Services.Users
@@ -127,24 +126,23 @@ namespace Doodle.Services.Users
                 return Result<bool>.Successful(true, "Please check your email to reset your password.");
 
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
             await _emailSender.SendEmailAsync(
-                email,
+                new List<string> { email },
                 "Reset Password",
-                $"Please reset your password by <a href='{HtmlEncoder.Default.Encode($"https://localhost:7077/account/reset-password?area=Identity&code={code}")}'>clicking here</a>.");
+                $"Please reset your password by <a href='{HttpUtility.UrlEncode($"https://localhost:7077/account/reset-password?area=Identity&code={code}")}'>clicking here</a>.");
 
             return Result<bool>.Successful(true, "Please check your email to reset your password.");
         }
 
-        public async Task<Result<bool>> ResetPassword(string email, string code, string password)
+        public async Task<Result<bool>> ResetPassword(string email, string code, string newPassword)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
                 return Result<bool>.Successful(true, "Your password has been reset. You can now log in.");
 
-            var result = await _userManager.ResetPasswordAsync(user, code, password);
+            var result = await _userManager.ResetPasswordAsync(user, code, newPassword);
 
             if (result.Succeeded)
                 return Result<bool>.Successful(true, "Your password has been reset. You can now log in.");
