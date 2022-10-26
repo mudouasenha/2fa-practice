@@ -1,11 +1,10 @@
-﻿using Doodle.Api.Controllers.Models;
-using Doodle.Domain.Constants;
+﻿using Doodle.Api.Auth.Controllers.Models;
+using Doodle.Api.Controllers.Models;
 using Doodle.Domain.Entities;
 using Doodle.Services.Common;
-using Doodle.Services.Users.Abstractions;
+using Doodle.Services.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace Doodle.Api.Auth.Controllers.Users
 {
@@ -14,73 +13,39 @@ namespace Doodle.Api.Auth.Controllers.Users
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
-        private readonly IUsersService _usersService;
+        private readonly IIdentityUserService _identityUserService;
 
-        public AuthController(ILogger<AuthController> logger, IUsersService usersService)
+        public AuthController(ILogger<AuthController> logger, IIdentityUserService identityUserService)
         {
             _logger = logger;
-            _usersService = usersService;
+            _identityUserService = identityUserService;
         }
 
-        [HttpGet(), Authorize(Roles = RoleConstants.Admin)]
-        public async Task<IEnumerable<User>> Get()
-        {
-            return new List<User> { new User() };
-        }
-
-        /// <summary>
-        /// Registers an user.
-        /// </summary>
-        /// <param name="registerInput"></param>
-        /// <returns>A newly created User</returns>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /user/register
-        ///     {
-        ///        "Name": "matheus",
-        ///        "Username": "username",
-        ///        "Address": "5th Street",
-        ///        "Email": "test@test.com",
-        ///        "Password": "password",
-        ///        "PhoneNumber": "4444444444"
-        ///     }
-        ///
-        /// </remarks>
-        /// <response code="200">Returns the newly created User</response>
-        /// <response code="400">If the registration fails</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("register")]
-        public async Task<Result<User>> Register([FromBody] UserRegisterInputModel inputModel)
+        public async Task<IActionResult> Register([FromBody] UserRegisterInputModel inputModel)
         {
-            var result = await _usersService.Register(UserRegisterInputModel.ToInput(inputModel));
-            return result;
+            var result = await _identityUserService.Register(UserRegisterInputModel.ToInput(inputModel));
+            return Ok(result);
         }
 
         [HttpPost("signin")]
-        public async Task<Result<User>> SignIn([FromBody] UserSignInInputModel inputModel)
+        public async Task<IActionResult> SignIn([FromBody] UserSignInInputModel inputModel)
         {
-            var result = await _usersService.SignIn(UserSignInInputModel.ToInput(inputModel));
-            return result;
+            var result = await _identityUserService.SignIn(UserSignInInputModel.ToInput(inputModel));
+            return Ok(result);
         }
-
-        //[HttpPost("signout"), Authorize]
-        //public async Task<Result<User>> SignOut([FromBody] UserSignOutInputModel inputModel)
-        //{
-        //    var result = await _usersService.SignOut(UserSignOutInputModel.ToInput(inputModel));
-        //    return result;
-        //}
 
         [HttpPost("signout"), Authorize]
         public async Task<IActionResult> SignOut([FromBody] UserSignOutInputModel inputModel)
         {
             try
             {
-                var result = _usersService.SignOut();
+                var result = await _identityUserService.SignOut(UserSignOutInputModel.ToInput(inputModel));
 
                 if (!result.Success)
-                    return Problem(result);
+                    return Problem(result.Message);
 
                 return Ok(result);
             }
@@ -98,14 +63,14 @@ namespace Doodle.Api.Auth.Controllers.Users
         }
 
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] PasswordRequestInput input)
+        public async Task<IActionResult> ForgotPassword([FromBody] PasswordResetInputModel input)
         {
             try
             {
-                var result = _usersService.ForgotPassword();
+                var result = await _identityUserService.ForgotPassword(input.Email);
 
                 if (!result.Success)
-                    return Problem(result);
+                    return Problem(result.Message);
 
                 return Ok(result);
             }
@@ -117,14 +82,14 @@ namespace Doodle.Api.Auth.Controllers.Users
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResetPassword()
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetInputModel inputModel)
         {
             try
             {
-                var result = _usersService.ResetPassword();
+                var result = await _identityUserService.ResetPassword(PasswordResetInputModel.ToInput(inputModel));
 
                 if (!result.Success)
-                    return Problem(result);
+                    return Problem(result.Message);
 
                 return Ok(result);
             }
@@ -134,29 +99,5 @@ namespace Doodle.Api.Auth.Controllers.Users
                 return Problem();
             }
         }
-
-        [HttpDelete("delete-account"), Authorize(Roles = RoleConstants.Admin)]
-        public async Task<Result<User>> DeleteAccount()
-        {
-            throw new NotImplementedException("Not yet Implemented");
-            //var result = await _usersService.DeleteUser(UserRegisterInputModel.ToInput(inputModel));
-            //return result;
-        }
-
-    }
-
-    public class PasswordRequestInput
-    {
-        [Required]
-        public string Email { get; set; }
-        [DataType(DataType.Password)]
-        [Required]
-        public string Password { get; set; }
-        [DataType(DataType.Password)]
-        [Required]
-        [Compare("Password")]
-        public string RePassword { get; set; }
-        [Required]
-        public string Token { get; set; }
     }
 }

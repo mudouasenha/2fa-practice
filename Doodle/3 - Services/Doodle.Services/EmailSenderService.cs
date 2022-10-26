@@ -60,7 +60,7 @@ namespace Doodle.Services
 
     public interface IEmailSenderService
     {
-        Task SendEmailAsync(IEnumerable<string> destinataries, string subject, string htmlMessage)
+        Task SendEmailAsync(IEnumerable<string> destinataries, string subject, string htmlMessage);
     };
 
     public class MailMessage

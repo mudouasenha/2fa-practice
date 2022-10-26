@@ -1,7 +1,6 @@
 ﻿using Doodle.Domain.Entities;
 using Doodle.Services.Common;
 using Doodle.Services.Security;
-using Doodle.Services.Users.Abstractions;
 using Doodle.Services.Users.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -11,7 +10,7 @@ using System.Web;
 
 namespace Doodle.Services.Users
 {
-    internal class IdentityUserService : IUsersService
+    internal class IdentityUserService : IIdentityUserService
     {
         private readonly ILogger<IdentityUserService> _logger;
         private readonly UserManager<IdentityUser> _userManager;
@@ -20,7 +19,6 @@ namespace Doodle.Services.Users
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly IEmailSenderService _emailSender;
-        private readonly IUsersService _usersService;
 
         public IdentityUserService(ILogger<IdentityUserService> logger,
                                    UserManager<IdentityUser> userManager,
@@ -28,8 +26,7 @@ namespace Doodle.Services.Users
                                    ITokenService tokenService,
                                    IUserStore<IdentityUser> userStore,
                                    IUserEmailStore<IdentityUser> emailStore,
-                                   IEmailSenderService emailSender,
-                                   IUsersService usersService)
+                                   IEmailSenderService emailSender)
         {
             _logger = logger;
             _userManager = userManager;
@@ -38,24 +35,13 @@ namespace Doodle.Services.Users
             _userStore = userStore;
             _emailStore = emailStore;
             _emailSender = emailSender;
-            _usersService = usersService;
-        }
-
-        public Task<Result<User>> DeleteUser(UserFilterDTO input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> GetByCredentials(string username, string password)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<Result<User>> Register(UserRegisterInput input)
         {
             var user = CreateUser();
 
-            await _userStore.SetUserNameAsync(user, input.Email, CancellationToken.None);
+            await _userStore.SetUserNameAsync(user, input.Username, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, input.Email, CancellationToken.None);
 
             var result = await _userManager.CreateAsync(user, input.Password);
@@ -65,22 +51,21 @@ namespace Doodle.Services.Users
 
             _logger.LogInformation("User created a new account with password.");
 
-            await SendEmailAsync(user);
+            await SendEmailAccountConfirmation(user);
 
             return Result<User>.Successful(new User(), "usuário criado.");
         }
 
-        public async Task<Result<Token>> SignIn(UserSignInInput input, string username)
+        public async Task<Result<Token>> SignIn(UserSignInInput input)
         {
-            var externalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            var result = await _signInManager.PasswordSignInAsync(username, input.Password, false, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(input.Username, input.Password, false, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
                 _logger.LogInformation("User logged in.");
-                var user = _signInManager.UserManager.Users.FirstOrDefault(p => p.NormalizedUserName == username.ToUpper());
+                var user = await _signInManager.UserManager.FindByNameAsync(input.Username);
                 var token = _tokenService.GenerateToken(user);
+
                 return Result<Token>.Successful(token, "User logged in.");
             }
 
@@ -104,24 +89,10 @@ namespace Doodle.Services.Users
             return Result<bool>.Successful(true, "User logged out.");
         }
 
-        public Task<User> UnverifyUser(string username, string password)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> UpdateMfa(UserVerifyInput input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Result<User>> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Result<bool>> ForgotPassword(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
+
             if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 return Result<bool>.Successful(true, "Please check your email to reset your password.");
 
@@ -135,14 +106,14 @@ namespace Doodle.Services.Users
             return Result<bool>.Successful(true, "Please check your email to reset your password.");
         }
 
-        public async Task<Result<bool>> ResetPassword(string email, string code, string newPassword)
+        public async Task<Result<bool>> ResetPassword(PasswordResetInput input)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(input.Email);
 
             if (user == null)
                 return Result<bool>.Successful(true, "Your password has been reset. You can now log in.");
 
-            var result = await _userManager.ResetPasswordAsync(user, code, newPassword);
+            var result = await _userManager.ResetPasswordAsync(user, input.Token, input.Password);
 
             if (result.Succeeded)
                 return Result<bool>.Successful(true, "Your password has been reset. You can now log in.");
@@ -152,12 +123,42 @@ namespace Doodle.Services.Users
             return Result<bool>.Fail(string.Join("; ", errors));
         }
 
-        public Task<User> VerifyUser(UserVerifyInput input)
+        public async Task<Result<bool>> ActivateAccount(AccountActivationInput input)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByIdAsync(input.UserId);
+            if (user == null)
+                return Result<bool>.Fail($"Unable to load user with ID '{input.UserId}'.");
+
+            var result = await _userManager.ConfirmEmailAsync(user, input.Code);
+
+            if (result.Succeeded)
+                return Result<bool>.Successful(true, "Thank you for confirming your email.");
+
+            return Result<bool>.Fail("Error confirming your email.");
         }
 
-        private async Task<bool> SendEmailAsync(IdentityUser user)
+        public async Task<Result<bool>> ChangeEmail(ChangeEmailInput input)
+        {
+            if (input.UserId == null || input.Email == null || input.Code == null)
+                return Result<bool>.Fail("Please fill all .");
+
+            var user = await _userManager.FindByIdAsync(input.UserId);
+            if (user == null)
+                return Result<bool>.Fail($"Unable to load user with ID '{input.UserId}'.");
+
+            var result = await _userManager.ChangeEmailAsync(user, input.Email, input.Code);
+            if (!result.Succeeded)
+                Result<bool>.Fail("Error changing email.");
+
+            var setEmailResult = await _userManager.SetEmailAsync(user, input.Email);
+            if (!setEmailResult.Succeeded)
+                Result<bool>.Fail("Error changing user name.");
+
+            await _signInManager.RefreshSignInAsync(user);
+            return Result<bool>.Successful(true, "Thank you for confirming your email change.");
+        }
+
+        private async Task<bool> SendEmailAccountConfirmation(IdentityUser user)
         {
             var userId = await _userManager.GetUserIdAsync(user);
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -171,41 +172,6 @@ namespace Doodle.Services.Users
             return true;
         }
 
-        public async Task<Result<bool>> ActivateAccount(string userId, string code)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return Result<bool>.Fail($"Unable to load user with ID '{userId}'.");
-
-            var result = await _userManager.ConfirmEmailAsync(user, code);
-
-            if (result.Succeeded)
-                return Result<bool>.Successful(true, "Thank you for confirming your email.");
-
-            return Result<bool>.Fail("Error confirming your email.");
-        }
-
-        private IdentityUser CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<IdentityUser>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
-            }
-        }
-
-        private IUserEmailStore<IdentityUser> GetEmailStore()
-        {
-            if (!_userManager.SupportsUserEmail)
-            {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
-            }
-            return (IUserEmailStore<IdentityUser>)_userStore;
-        }
+        private static IdentityUser CreateUser() => Activator.CreateInstance<IdentityUser>();
     }
 }
