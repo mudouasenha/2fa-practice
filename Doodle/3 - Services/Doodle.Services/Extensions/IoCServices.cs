@@ -1,9 +1,12 @@
-﻿using Doodle.Services.Extensions.Policies;
+﻿using Doodle.Services.Auth.Security.Abstractions;
+using Doodle.Services.Auth.Users;
+using Doodle.Services.Auth.Users.Abstractions;
+using Doodle.Services.EmailSender;
+using Doodle.Services.EmailSender.Abstractions;
+using Doodle.Services.Extensions.Policies;
 using Doodle.Services.Options;
 using Doodle.Services.Security;
-using Doodle.Services.Security.Abstractions;
 using Doodle.Services.Users;
-using Doodle.Services.Users.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,8 +18,10 @@ public static class IoCServices
     {
         services.Configure<EmailSenderOptions>(opt => config.GetSection(nameof(EmailSenderOptions)).Bind(opt));
 
-        services.AddScoped<IUsersService, UsersService>()
-            .AddScoped<ICryptoService, CryptoService>();
+        services.AddScoped<IUserRegistrationService, UserRegistrationService>()
+            .AddScoped<IUserSessionService, UserSessionService>()
+            .AddScoped<IEmailSenderService, EmailSenderService>()
+            .AddScoped<ITokenService, TokenService>();
 
         return services;
     }

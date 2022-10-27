@@ -18,5 +18,10 @@
     <ProjectReference Include="..\..\4 - Domain\Doodle.Domain\Doodle.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Auth\Security\Models\" />
+    <Folder Include="Social\" />
+  </ItemGroup>
+
 
 </Project>

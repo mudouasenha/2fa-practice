@@ -5,4 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Social\Entities\" />
+    <Folder Include="Social\Enums\" />
+  </ItemGroup>
+
 </Project>
