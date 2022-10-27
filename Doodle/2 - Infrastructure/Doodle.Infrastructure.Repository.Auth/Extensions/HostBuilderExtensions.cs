@@ -15,7 +15,7 @@ namespace Doodle.Infrastructure.Repository.Auth.Extensions
     {
         public static async Task InitializeAndRunAsync(this IHost host)
         {
-            host.RunMigrations<DoodleDbContext>();
+            host.RunMigrations<DoodleAuthDbContext>();
             await host.RunAsync();
         }
 

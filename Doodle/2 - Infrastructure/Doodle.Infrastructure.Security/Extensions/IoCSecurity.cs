@@ -1,4 +1,4 @@
-﻿using Doodle.Infrastructure.Repository.Data.Contexts;
+﻿using Doodle.Infrastructure.Repository.Auth.Data.Contexts;
 using Doodle.Infrastructure.Security.Models.Options;
 using Doodle.Infrastructure.Security.MultiFactorAuthentication;
 using Doodle.Infrastructure.Security.MultiFactorAuthentication.Abstractions;
@@ -23,7 +23,7 @@ namespace Doodle.Infrastructure.Security.Extensions
                 .AddRoles<IdentityRole>()
                 .AddUserManager<ApplicationIdentityUserManager>()
                 .AddDefaultUI()
-                .AddEntityFrameworkStores<DoodleDbContext>()
+                .AddEntityFrameworkStores<DoodleAuthDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, AdditionalUserClaimsPrincipalFactory>();

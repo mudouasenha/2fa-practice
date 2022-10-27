@@ -16,8 +16,8 @@ namespace Doodle.Infrastructure.Repository.Auth.Extensions
     {
         public static IServiceCollection AddRepositoryInfrastructure(this IServiceCollection services, IConfiguration config) =>
             services.BindOptions(config)
-                    .AddDbContext<DoodleDbContext>(options => options.UseSqlServer(config.GetConnectionString("Doodle")))
-                        .AddAsyncInitializer<DbContextInitializer<DoodleDbContext>>()
+                    .AddDbContext<DoodleAuthDbContext>(options => options.UseSqlServer(config.GetConnectionString("Doodle")))
+                        .AddAsyncInitializer<DbContextInitializer<DoodleAuthDbContext>>()
                     .AddRepositories()
                     .AddDatabaseTransaction()
                     .AddDatabaseDeveloperPageExceptionFilter();

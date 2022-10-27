@@ -1,4 +1,4 @@
-﻿using Doodle.Api.Auth.Controllers.Models;
+﻿using Doodle.Api.Auth.Controllers.Auth.Models;
 using Doodle.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
@@ -7,7 +7,7 @@ using System.Text;
 namespace Doodle.Api.Auth.Controllers.Auth
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("auth/[controller]")]
     public class EmailController : ControllerBase
     {
         private readonly IIdentityUserService _identityUserService;

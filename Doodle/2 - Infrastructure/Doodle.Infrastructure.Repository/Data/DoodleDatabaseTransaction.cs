@@ -1,13 +1,7 @@
-﻿using Doodle.Infrastructure.Repository.Data.Contexts;
-using Microsoft.EntityFrameworkCore;
+﻿using Doodle.Infrastructure.Repository.Auth.Data.Contexts;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Doodle.Infrastructure.Repository.Data
+namespace Doodle.Infrastructure.Repository.Auth.Data
 {
     public interface IDatabaseTransaction
     {

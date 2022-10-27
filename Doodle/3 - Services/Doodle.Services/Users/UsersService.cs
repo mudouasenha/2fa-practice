@@ -1,5 +1,5 @@
 ﻿using Doodle.Domain.Entities;
-using Doodle.Infrastructure.Repository.Repositories.Abstractions;
+using Doodle.Infrastructure.Repository.Auth.Repositories.Abstractions;
 using Doodle.Infrastructure.Security.MultiFactorAuthentication.Abstractions;
 using Doodle.Services.Common;
 using Doodle.Services.Security.Abstractions;

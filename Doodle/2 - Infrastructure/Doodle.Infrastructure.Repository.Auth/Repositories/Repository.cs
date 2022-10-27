@@ -7,10 +7,10 @@ namespace Doodle.Infrastructure.Repository.Auth.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
     {
-        protected readonly DoodleDbContext dbContext;
+        protected readonly DoodleAuthDbContext dbContext;
         protected readonly DbSet<TEntity> dbSet;
 
-        public Repository(DoodleDbContext dbContext)
+        public Repository(DoodleAuthDbContext dbContext)
         {
             this.dbContext = dbContext;
             dbSet = dbContext.Set<TEntity>();

@@ -1,7 +1,7 @@
 ﻿using Doodle.Domain.Entities;
 using Doodle.Domain.Enums;
 using Doodle.Domain.Extensions;
-using Doodle.Infrastructure.Repository.Repositories.Abstractions;
+using Doodle.Infrastructure.Repository.Auth.Repositories.Abstractions;
 using Doodle.Infrastructure.Security.Cryptography;
 using Doodle.Infrastructure.Security.Cryptography.Confidentiality.Symmetric;
 using Doodle.Infrastructure.Security.Cryptography.Integrity;

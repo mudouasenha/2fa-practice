@@ -16,9 +16,10 @@
     <PackageReference Include="Twilio" Version="5.80.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Doodle.Infrastructure.Repository\Doodle.Infrastructure.Repository.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+
+		<ProjectReference Include="..\Doodle.Infrastructure.Repository.Auth\Doodle.Infrastructure.Repository.Auth.csproj" />
+	</ItemGroup>
 
   <ItemGroup>
     <Folder Include="Cryptography\Confidentiality\Asymmetric\" />

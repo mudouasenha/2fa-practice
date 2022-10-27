@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Doodle.Infrastructure.Repository.Auth.Data.Contexts
 {
-    public class DoodleDbContext : DbContext
+    public class DoodleAuthDbContext : IdentityDbContext
     {
-        public DoodleDbContext(DbContextOptions<DoodleDbContext> options) : base(options)
+        public DoodleAuthDbContext(DbContextOptions<DoodleAuthDbContext> options) : base(options)
         {
         }
 

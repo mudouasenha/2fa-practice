@@ -31,7 +31,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\2 - Infrastructure\Doodle.Infrastructure.Security\Doodle.Infrastructure.Security.csproj" />
+	  <ProjectReference Include="..\..\2 - Infrastructure\Doodle.Infrastructure.Repository.Auth\Doodle.Infrastructure.Repository.Auth.csproj" />
     <ProjectReference Include="..\..\3 - Services\Doodle.Services\Doodle.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://docs.renovatebot.com/renovate-schema.json" /></VisualStudio></ProjectExtensions>
