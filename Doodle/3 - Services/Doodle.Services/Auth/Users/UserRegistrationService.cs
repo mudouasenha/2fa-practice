@@ -15,11 +15,11 @@ namespace Doodle.Services.Auth.Users
     public class UserRegistrationService : IUserRegistrationService
     {
         private readonly ILogger<UserRegistrationService> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSenderService _emailSender;
 
         public UserRegistrationService(ILogger<UserRegistrationService> logger,
-                                   UserManager<IdentityUser> userManager,
+                                   UserManager<ApplicationUser> userManager,
                                    IEmailSenderService emailSender)
         {
             _logger = logger;
@@ -27,7 +27,7 @@ namespace Doodle.Services.Auth.Users
             _emailSender = emailSender;
         }
 
-        public async Task<Result<User>> Register(UserRegisterInput input)
+        public async Task<Result<ApplicationUser>> Register(UserRegisterInput input)
         {
             var user = CreateUser();
 
@@ -37,7 +37,7 @@ namespace Doodle.Services.Auth.Users
             var result = await _userManager.CreateAsync(user, input.Password);
 
             if (!result.Succeeded)
-                return Result<User>.Fail("Erro ao criar usuário");
+                return Result<ApplicationUser>.Fail("Erro ao criar usuário");
 
             await _userManager.AddToRoleAsync(user, RoleConstants.Reader);
 
@@ -45,7 +45,7 @@ namespace Doodle.Services.Auth.Users
 
             await SendEmailAccountConfirmation(user);
 
-            return Result<User>.Successful(new User(), "usuário criado.");
+            return Result<ApplicationUser>.Successful(new ApplicationUser(), "usuário criado.");
         }
 
         public async Task<Result<bool>> ActivateAccount(AccountActivationInput input)
@@ -62,7 +62,7 @@ namespace Doodle.Services.Auth.Users
             return Result<bool>.Fail("Error confirming your email.");
         }
 
-        private async Task<bool> SendEmailAccountConfirmation(IdentityUser user)
+        private async Task<bool> SendEmailAccountConfirmation(ApplicationUser user)
         {
             var userId = await _userManager.GetUserIdAsync(user);
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -76,6 +76,6 @@ namespace Doodle.Services.Auth.Users
             return true;
         }
 
-        private static IdentityUser CreateUser() => Activator.CreateInstance<IdentityUser>();
+        private static ApplicationUser CreateUser() => Activator.CreateInstance<ApplicationUser>();
     }
 }

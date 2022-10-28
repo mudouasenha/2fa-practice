@@ -46,17 +46,5 @@ namespace Doodle.Social.Infrastructure.Repository.Repositories
         public virtual IQueryable<TEntity> AsQueryable() => dbSet;
 
         public async Task<TEntity> SelectById(int id) => await dbSet.AsQueryable().AsNoTracking().FirstOrDefaultAsync(p => p.Id.Equals(id));
-
-        public async Task ClearChangeTrackers()
-        {
-            var changedEntriesCopy = dbContext.ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added ||
-                            e.State == EntityState.Modified ||
-                            e.State == EntityState.Deleted)
-                .ToList();
-
-            foreach (var entry in changedEntriesCopy)
-                entry.State = EntityState.Detached;
-        }
     }
 }

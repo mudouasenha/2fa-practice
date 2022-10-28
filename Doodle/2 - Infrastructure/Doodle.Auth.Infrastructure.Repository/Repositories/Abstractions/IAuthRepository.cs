@@ -1,14 +1,8 @@
-﻿using Doodle.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Doodle.Auth.Infrastructure.Repository.Repositories.Abstractions
 {
-    public interface IRepository<TEntity> where TEntity : EntityBase
+    public interface IAuthRepository<TEntity> where TEntity : IdentityUser<Guid>
     {
         Task<bool> Exists(int id);
 

@@ -16,11 +16,11 @@ namespace Doodle.Api.Auth.Controllers.Users
         private readonly IUserSessionService _userSessionService;
         private readonly IUserRegistrationService _userRegistrationService;
 
-        public AuthController(ILogger<AuthController> logger, IUserRegistrationService userRegistrationService, IUserSessionService identityUserService)
+        public AuthController(ILogger<AuthController> logger, IUserRegistrationService userRegistrationService, IUserSessionService userSessionService)
         {
             _logger = logger;
             _userRegistrationService = userRegistrationService;
-            _userSessionService = identityUserService;
+            _userSessionService = userSessionService;
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -59,7 +59,7 @@ namespace Doodle.Api.Auth.Controllers.Users
         }
 
         [HttpPut("change-password"), Authorize]
-        public async Task<Result<User>> ChangePassword([FromBody] UserSignOutInputModel inputModel)
+        public Task<Result<ApplicationUser>> ChangePassword([FromBody] UserSignOutInputModel inputModel)
         {
             throw new NotImplementedException("Not yet Implemented");
         }

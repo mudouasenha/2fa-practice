@@ -5,10 +5,10 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication.Abstractions
 {
     public interface IVerification
     {
-        Task<(VerificationResult, string)> StartVerificationAsync(User user);
+        Task<(VerificationResult, string)> StartVerificationAsync(ApplicationUser user);
 
-        Task<VerificationResult> CheckVerificationAsync(User user, string code);
+        Task<VerificationResult> CheckVerificationAsync(ApplicationUser user, string code);
 
-        Task<VerificationResult> VerifyResource(User user, string payload);
+        Task<VerificationResult> VerifyResource(ApplicationUser user, string payload);
     }
 }

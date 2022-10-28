@@ -1,6 +1,6 @@
-﻿using Doodle.Services.Auth.Security.Abstractions;
+﻿using Doodle.Domain.Entities;
+using Doodle.Services.Auth.Security.Abstractions;
 using Doodle.Services.Users.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,7 +10,7 @@ namespace Doodle.Services.Security
 {
     public class TokenService : ITokenService
     {
-        public Token GenerateToken(IdentityUser user, IEnumerable<string> roles)
+        public Token GenerateToken(ApplicationUser user, IEnumerable<string> roles)
         {
             var userClaims = new List<Claim>
             {

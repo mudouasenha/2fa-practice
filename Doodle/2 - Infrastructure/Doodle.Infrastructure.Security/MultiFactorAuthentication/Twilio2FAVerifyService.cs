@@ -22,7 +22,7 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
             TwilioClient.Init(_twilioOptions.Value.AccountSid, _twilioOptions.Value.AuthToken);
         }
 
-        public async Task<VerificationResult> VerifyResource(User user, string payload)
+        public async Task<VerificationResult> VerifyResource(ApplicationUser user, string payload)
         {
             var factors = await ReadResource(user);
             var totpFactor = factors.FirstOrDefault(p => p.FactorType == FactorResource.FactorTypesEnum.Totp);
@@ -39,7 +39,7 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
                 new VerificationResult(new List<string> { "Wrong code. Try again." });
         }
 
-        public async Task<(VerificationResult, string)> StartVerificationAsync(User user)
+        public async Task<(VerificationResult, string)> StartVerificationAsync(ApplicationUser user)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
             }
         }
 
-        public async Task<VerificationResult> CheckVerificationAsync(User user, string code)
+        public async Task<VerificationResult> CheckVerificationAsync(ApplicationUser user, string code)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
                 if (totpFactor == default)
                     return new VerificationResult(new List<string> { "No Totp factor found." });
 
-                var challenge = ChallengeResource.Create(
+                var challenge = await ChallengeResource.CreateAsync(
                     authPayload: code,
                     factorSid: totpFactor.Sid,
                     pathServiceSid: _twilioOptions.Value.ServiceSid,
@@ -85,8 +85,6 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
 
         private async Task<(NewFactorResource, string)> CreateVerificationResource()
         {
-            TwilioClient.Init(_twilioOptions.Value.AccountSid, _twilioOptions.Value.AuthToken);
-
             var userIdentity = Guid.NewGuid().ToString();
 
             var verification = await NewFactorResource.CreateAsync(
@@ -100,11 +98,9 @@ namespace Doodle.Infrastructure.Security.MultiFactorAuthentication
             return (verification, userIdentity);
         }
 
-        private async Task<List<FactorResource>> ReadResource(User user)
+        private async Task<List<FactorResource>> ReadResource(ApplicationUser user)
         {
-            TwilioClient.Init(_twilioOptions.Value.AccountSid, _twilioOptions.Value.AuthToken);
-
-            var factors = FactorResource.Read(
+            var factors = await FactorResource.ReadAsync(
                 pathServiceSid: _twilioOptions.Value.ServiceSid,
                 pathIdentity: user.MfaIdentity,
                 limit: 20

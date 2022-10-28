@@ -1,4 +1,5 @@
-﻿using Doodle.Services.Auth.Security.Abstractions;
+﻿using Doodle.Domain.Entities;
+using Doodle.Services.Auth.Security.Abstractions;
 using Doodle.Services.Common;
 using Doodle.Services.EmailSender.Abstractions;
 using Doodle.Services.Users.Models;
@@ -11,14 +12,14 @@ namespace Doodle.Services.Users
     internal class UserSessionService : IUserSessionService
     {
         private readonly ILogger<UserSessionService> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly IEmailSenderService _emailSender;
 
         public UserSessionService(ILogger<UserSessionService> logger,
-                                   UserManager<IdentityUser> userManager,
-                                   SignInManager<IdentityUser> signInManager,
+                                   UserManager<ApplicationUser> userManager,
+                                   SignInManager<ApplicationUser> signInManager,
                                    ITokenService tokenService,
                                    IEmailSenderService emailSender)
         {

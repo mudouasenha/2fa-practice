@@ -1,15 +1,8 @@
-﻿using Doodle.Domain.Entities;
-using Doodle.Infrastructure.Security.MultiFactorAuthentication.Abstractions;
-using Doodle.Services.Auth.Deprecated.Abstractions;
-using Doodle.Services.Common;
-using Doodle.Services.Security.Abstractions;
-using Doodle.Services.Users.Models;
-
-namespace Doodle.Services.Auth.Deprecated
+﻿namespace Doodle.Services.Auth.Deprecated
 {
-    public class UsersService : IUsersService
+    public class UsersService/* : IUsersService*/
     {
-        private readonly IUserRepository _userRepository;
+        /*private readonly IUserRepository _userRepository;
         private readonly IVerification _verification;
         private readonly ICryptoService _cryptoService;
 
@@ -20,7 +13,7 @@ namespace Doodle.Services.Auth.Deprecated
             _verification = verification;
         }
 
-        public async Task<Result<User>> DeleteUser(UserFilterDTO input)
+        public async Task<Result<ApplicationUser>> DeleteUser(UserFilterDTO input)
         {
             var user = await _userRepository.GetByUsername(input.UserName);
 
@@ -29,10 +22,10 @@ namespace Doodle.Services.Auth.Deprecated
 
             var userDeleted = await _userRepository.Delete(user.Id);
 
-            return new Result<User>(userDeleted, "User deleted Successfully", true);
+            return new Result<ApplicationUser>(userDeleted, "User deleted Successfully", true);
         }
 
-        public async Task<Result<User>> Register(UserRegisterInput input)
+        public async Task<Result<ApplicationUser>> Register(UserRegisterInput input)
         {
             var userFromRepository = await _userRepository.ExistsByUsername(input.Username);
 
@@ -41,7 +34,7 @@ namespace Doodle.Services.Auth.Deprecated
 
             var encryptionData = _cryptoService.GenerateUserEncryptionData(input.Username, input.Password);
 
-            var user = new User()
+            var user = new ApplicationUser()
             {
                 Name = input.Name,
                 Address = input.Address,
@@ -55,10 +48,10 @@ namespace Doodle.Services.Auth.Deprecated
 
             var userInserted = await _userRepository.Insert(user);
 
-            return new Result<User>(userInserted, "User registered Successfully", true);
+            return new Result<ApplicationUser>(userInserted, "User registered Successfully", true);
         }
 
-        public async Task<User> GetByCredentials(string username, string password)
+        public async Task<ApplicationUser> GetByCredentials(string username, string password)
         {
             var usersFromRepository = await _userRepository.GetAll();
 
@@ -67,35 +60,35 @@ namespace Doodle.Services.Auth.Deprecated
             return userWithValidCredentials;
         }
 
-        public async Task<Result<User>> SignIn(UserSignInInput input)
+        public async Task<Result<ApplicationUser>> SignIn(UserSignInInput input)
         {
             var user = await GetByCredentials(input.Username, input.Password);
 
             if (user == default)
-                return new Result<User>(default, "Could not log in. Please verify your credentials.", false);
+                return new Result<ApplicationUser>(default, "Could not log in. Please verify your credentials.", false);
 
             if (user.MfaIdentity == default)
-                return new Result<User>(default, "Your user is not authenticated via TOTP. Please authenticate in /api/verify", false);
+                return new Result<ApplicationUser>(default, "Your user is not authenticated via TOTP. Please authenticate in /api/verify", false);
 
             await UnverifyUser(input.Username, input.Password);
 
             var verificationResult = await _verification.CheckVerificationAsync(user, input.TotpCode);
 
             if (!verificationResult.IsValid)
-                return new Result<User>(default, string.Join(", ", verificationResult.Errors), false);
+                return new Result<ApplicationUser>(default, string.Join(", ", verificationResult.Errors), false);
 
             await VerifyUser(new UserVerifyInput() { Code = input.TotpCode, Username = input.Username, Password = input.Password, MfaExternalId = user.MfaIdentity });
 
-            return new Result<User>(user, "Signed in Successfully.", true);
+            return new Result<ApplicationUser>(user, "Signed in Successfully.", true);
         }
 
-        public async Task<Result<User>> SignOut(UserSignOutInput input)
+        public async Task<Result<ApplicationUser>> SignOut(UserSignOutInput input)
         {
             var userFromRepository = await _userRepository.GetByUsername(input.Username);
-            return new Result<User>(new User(), "Signed out Successfully", true);
+            return new Result<ApplicationUser>(new ApplicationUser(), "Signed out Successfully", true);
         }
 
-        public async Task<Result<User>> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword)
+        public async Task<Result<ApplicationUser>> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword)
         {
             var userFromRepository = await _userRepository.GetByUsername(input.UserName);
 
@@ -107,10 +100,10 @@ namespace Doodle.Services.Auth.Deprecated
 
             var userUpdated = await _userRepository.Update(userFromRepository);
 
-            return new Result<User>(userUpdated, "Password Updated Successfully", true);
+            return new Result<ApplicationUser>(userUpdated, "Password Updated Successfully", true);
         }
 
-        public async Task<User> VerifyUser(UserVerifyInput input)
+        public async Task<ApplicationUser> VerifyUser(UserVerifyInput input)
         {
             await _userRepository.ClearChangeTrackers();
 
@@ -123,7 +116,7 @@ namespace Doodle.Services.Auth.Deprecated
             return user;
         }
 
-        public async Task<User> UnverifyUser(string username, string password)
+        public async Task<ApplicationUser> UnverifyUser(string username, string password)
         {
             await _userRepository.ClearChangeTrackers();
 
@@ -136,7 +129,7 @@ namespace Doodle.Services.Auth.Deprecated
             return user;
         }
 
-        public async Task<User> UpdateMfa(UserVerifyInput input)
+        public async Task<ApplicationUser> UpdateMfa(UserVerifyInput input)
         {
             await _userRepository.ClearChangeTrackers();
 
@@ -147,6 +140,6 @@ namespace Doodle.Services.Auth.Deprecated
             await _userRepository.Update(user);
 
             return user;
-        }
+        }*/
     }
 }

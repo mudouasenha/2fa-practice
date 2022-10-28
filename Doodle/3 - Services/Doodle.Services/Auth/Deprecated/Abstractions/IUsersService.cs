@@ -6,22 +6,22 @@ namespace Doodle.Services.Auth.Deprecated.Abstractions
 {
     public interface IUsersService
     {
-        Task<Result<User>> Register(UserRegisterInput input);
+        Task<Result<ApplicationUser>> Register(UserRegisterInput input);
 
-        Task<Result<User>> SignIn(UserSignInInput input);
+        Task<Result<ApplicationUser>> SignIn(UserSignInInput input);
 
-        Task<Result<User>> SignOut(UserSignOutInput input);
+        Task<Result<ApplicationUser>> SignOut(UserSignOutInput input);
 
-        Task<User> VerifyUser(UserVerifyInput input);
+        Task<ApplicationUser> VerifyUser(UserVerifyInput input);
 
-        Task<User> UnverifyUser(string username, string password);
+        Task<ApplicationUser> UnverifyUser(string username, string password);
 
-        Task<User> UpdateMfa(UserVerifyInput input);
+        Task<ApplicationUser> UpdateMfa(UserVerifyInput input);
 
-        Task<User> GetByCredentials(string username, string password);
+        Task<ApplicationUser> GetByCredentials(string username, string password);
 
-        Task<Result<User>> DeleteUser(UserFilterDTO input);
+        Task<Result<ApplicationUser>> DeleteUser(UserFilterDTO input);
 
-        Task<Result<User>> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword);
+        Task<Result<ApplicationUser>> UpdatePassword(UserFilterDTO input, string currentPassWord, string newPassword);
     }
 }

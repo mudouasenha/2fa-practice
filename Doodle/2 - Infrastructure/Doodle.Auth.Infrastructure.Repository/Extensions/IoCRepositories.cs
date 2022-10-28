@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Doodle.Auth.Infrastructure.Repository.Data;
+using Doodle.Auth.Infrastructure.Repository.Data.Contexts;
+using Doodle.Auth.Infrastructure.Repository.Options;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Doodle.Auth.Infrastructure.Repository.Data.Contexts;
-using Doodle.Auth.Infrastructure.Repository.Data;
-using Doodle.Auth.Infrastructure.Repository.Extensions;
-using Doodle.Auth.Infrastructure.Repository.Options;
-using Doodle.Auth.Infrastructure.Repository.Repositories.Abstractions;
-using Doodle.Auth.Infrastructure.Repository.Repositories;
 
 namespace Doodle.Auth.Infrastructure.Repository.Extensions
 {
@@ -22,8 +19,8 @@ namespace Doodle.Auth.Infrastructure.Repository.Extensions
                     .AddDatabaseTransaction()
                     .AddDatabaseDeveloperPageExceptionFilter();
 
-        public static IServiceCollection AddRepositories(this IServiceCollection services) =>
-            services.AddScoped<IUserRepository, UserRepository>();
+        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        { return services; }
 
         public static IServiceCollection AddDatabaseTransaction(this IServiceCollection services)
         {

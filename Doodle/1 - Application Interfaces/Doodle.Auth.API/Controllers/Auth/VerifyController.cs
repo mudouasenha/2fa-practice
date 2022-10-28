@@ -38,7 +38,7 @@ namespace Doodle.Api.Controllers
             {
                 await _usersService.VerifyUser(UserVerifyInputModel.ToInput(inputModel));
 
-                _logger.Log(LogLevel.Information, $"User verified: {user.Username}");
+                _logger.Log(LogLevel.Information, $"User verified: {user.UserName}");
             }
 
             return result;

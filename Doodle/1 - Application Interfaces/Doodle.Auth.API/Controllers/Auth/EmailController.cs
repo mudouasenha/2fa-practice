@@ -15,11 +15,11 @@ namespace Doodle.Api.Auth.Controllers.Auth
         private readonly IUserSessionService _userSessionService;
         private readonly IUserRegistrationService _userRegistrationService;
 
-        public EmailController(ILogger<EmailController> logger, IUserRegistrationService userRegistrationService, IUserSessionService identityUserService)
+        public EmailController(ILogger<EmailController> logger, IUserRegistrationService userRegistrationService, IUserSessionService userSessionService)
         {
             _logger = logger;
             _userRegistrationService = userRegistrationService;
-            _userSessionService = identityUserService;
+            _userSessionService = userSessionService;
         }
 
         [HttpPost("confirm-email")]

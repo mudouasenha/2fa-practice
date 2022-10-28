@@ -1,16 +1,16 @@
-﻿using Doodle.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using Doodle.Auth.Infrastructure.Repository.Data.Contexts;
+﻿using Doodle.Auth.Infrastructure.Repository.Data.Contexts;
 using Doodle.Auth.Infrastructure.Repository.Repositories.Abstractions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Doodle.Auth.Infrastructure.Repository.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
+    public class AuthRepository<TEntity> : IAuthRepository<TEntity> where TEntity : IdentityUser<Guid>
     {
         protected readonly DoodleAuthDbContext dbContext;
         protected readonly DbSet<TEntity> dbSet;
 
-        public Repository(DoodleAuthDbContext dbContext)
+        public AuthRepository(DoodleAuthDbContext dbContext)
         {
             this.dbContext = dbContext;
             dbSet = dbContext.Set<TEntity>();
@@ -46,17 +46,5 @@ namespace Doodle.Auth.Infrastructure.Repository.Repositories
         public virtual IQueryable<TEntity> AsQueryable() => dbSet;
 
         public async Task<TEntity> SelectById(int id) => await dbSet.AsQueryable().AsNoTracking().FirstOrDefaultAsync(p => p.Id.Equals(id));
-
-        public async Task ClearChangeTrackers()
-        {
-            var changedEntriesCopy = dbContext.ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added ||
-                            e.State == EntityState.Modified ||
-                            e.State == EntityState.Deleted)
-                .ToList();
-
-            foreach (var entry in changedEntriesCopy)
-                entry.State = EntityState.Detached;
-        }
     }
 }

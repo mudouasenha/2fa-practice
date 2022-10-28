@@ -1,12 +1,13 @@
 ﻿using Doodle.Domain.Constants;
+using Doodle.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Doodle.Auth.Infrastructure.Repository.Data.Seeds
 {
-    public class UserIdentitySeed
+    public static class UserIdentitySeed
     {
-        public static void Seed<TContext>(TContext context, string password) where TContext : IdentityDbContext
+        public static void Seed<TContext>(TContext context, string password) where TContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
         {
             context.Database.EnsureCreated();
             CreateUserAsync(context, "admin@admin.com", password, RoleConstants.Admin).GetAwaiter().GetResult();
@@ -14,9 +15,9 @@ namespace Doodle.Auth.Infrastructure.Repository.Data.Seeds
             context.SaveChanges();
         }
 
-        public static async Task CreateUserAsync<TContext>(TContext context, string email, string password, string role) where TContext : IdentityDbContext
+        public static async Task CreateUserAsync<TContext>(TContext context, string email, string password, string role) where TContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
         {
-            var user = new IdentityUser
+            var user = new ApplicationUser()
             {
                 UserName = email,
                 NormalizedUserName = email,
@@ -36,10 +37,10 @@ namespace Doodle.Auth.Infrastructure.Repository.Data.Seeds
 
             if (!context.Users.Any(u => u.UserName == user.UserName))
             {
-                var passwordHasher = new PasswordHasher<IdentityUser>();
+                var passwordHasher = new PasswordHasher<ApplicationUser>();
                 var hashed = passwordHasher.HashPassword(user, password);
                 user.PasswordHash = hashed;
-                var userStore = new UserStore<IdentityUser>(context);
+                var userStore = new UserStore<ApplicationUser, IdentityRole<Guid>, TContext, Guid>(context);
                 await userStore.CreateAsync(user);
                 await userStore.AddToRoleAsync(user, role);
             }

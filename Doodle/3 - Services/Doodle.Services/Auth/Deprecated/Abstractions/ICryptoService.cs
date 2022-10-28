@@ -7,8 +7,6 @@ namespace Doodle.Services.Security.Abstractions
     {
         UserEncryptedData GenerateUserEncryptionData(string username, string password);
 
-        DataIntegritySummaryResultDTO GenerateExecutionSummary(DataIntegrityInputDTO input);
-
-        User VerifyLogin(List<User> users, string username, string password);
+        ApplicationUser VerifyLogin(List<ApplicationUser> users, string username, string password);
     }
 }

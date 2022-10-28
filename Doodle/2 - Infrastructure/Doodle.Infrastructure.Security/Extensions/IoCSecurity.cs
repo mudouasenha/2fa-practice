@@ -1,4 +1,6 @@
-﻿using Doodle.Infrastructure.Security.Models.Options;
+﻿using Doodle.Auth.Infrastructure.Repository.Data.Contexts;
+using Doodle.Domain.Entities;
+using Doodle.Infrastructure.Security.Models.Options;
 using Doodle.Infrastructure.Security.MultiFactorAuthentication;
 using Doodle.Infrastructure.Security.MultiFactorAuthentication.Abstractions;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,14 +20,14 @@ namespace Doodle.Infrastructure.Security.Extensions
 
             services.AddCors();
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
-                .AddUserManager<ApplicationIdentityUserManager>()
+                .AddUserManager<ApplicationUserManager>()
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<DoodleAuthDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, AdditionalUserClaimsPrincipalFactory>();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AdditionalUserClaimsPrincipalFactory>();
             services.AddScoped<IVerification, Twilio2FAVerifyService>();
 
             services.AddAuthorization(options =>
