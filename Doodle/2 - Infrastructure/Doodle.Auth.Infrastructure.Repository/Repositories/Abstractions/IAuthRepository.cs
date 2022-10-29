@@ -2,7 +2,7 @@
 
 namespace Doodle.Auth.Infrastructure.Repository.Repositories.Abstractions
 {
-    public interface IAuthRepository<TEntity> where TEntity : IdentityUser<Guid>
+    public interface IAuthRepository<TEntity> where TEntity : IdentityUser<int>
     {
         Task<bool> Exists(int id);
 

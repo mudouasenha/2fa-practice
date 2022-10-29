@@ -1,5 +1,6 @@
 ﻿using Doodle.Auth.Infrastructure.Repository.Data.Contexts;
 using Doodle.Domain.Entities;
+using Doodle.Infrastructure.Security.Identity;
 using Doodle.Infrastructure.Security.Models.Options;
 using Doodle.Infrastructure.Security.MultiFactorAuthentication;
 using Doodle.Infrastructure.Security.MultiFactorAuthentication.Abstractions;
@@ -20,10 +21,8 @@ namespace Doodle.Infrastructure.Security.Extensions
 
             services.AddCors();
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddRoles<IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddUserManager<ApplicationUserManager>()
-                .AddDefaultUI()
                 .AddEntityFrameworkStores<DoodleAuthDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -36,6 +35,15 @@ namespace Doodle.Infrastructure.Security.Extensions
                 options.AddPolicy("AdminOnly", x => x.RequireClaim("Role", "Admin"));
             });
 
+            services.AddAuthenticationConfig(config);
+
+            services.ConfigureSecurity();
+
+            return services;
+        }
+
+        private static IServiceCollection AddAuthenticationConfig(this IServiceCollection services, IConfiguration config)
+        {
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -68,12 +76,10 @@ namespace Doodle.Infrastructure.Security.Extensions
                 };
             });
 
-            services.ConfigureSecurity();
-
             return services;
         }
 
-        public static IServiceCollection ConfigureSecurity(this IServiceCollection services)
+        private static IServiceCollection ConfigureSecurity(this IServiceCollection services)
         {
             services.Configure<IdentityOptions>(options =>
             {

@@ -2,7 +2,7 @@
 
 namespace Doodle.Domain.Entities
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<int>
     {
         public string Name { get; set; }
 
@@ -13,8 +13,6 @@ namespace Doodle.Domain.Entities
         public bool Verified { get; set; }
 
         public string MfaIdentity { get; set; }
-
-        public string Password { get; set; }
 
         public string Salt { get; set; }
 

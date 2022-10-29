@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Doodle.Infrastructure.Security.Models
+namespace Doodle.Infrastructure.Security.Identity
 {
     public static class Claims
     {

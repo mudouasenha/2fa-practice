@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Doodle.Infrastructure.Security.Extensions
+namespace Doodle.Infrastructure.Security.Identity
 {
     public class ApplicationUserManager : UserManager<ApplicationUser>
 

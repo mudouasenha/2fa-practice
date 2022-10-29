@@ -43,7 +43,7 @@ namespace Doodle.Services.Auth.Deprecated
                 var encryptedPassword = AesGcmSymmetricEncryption.Encrypt(password, derivedPassword, iv);
                 var hasEqualUsername = ScryptKDF.VerifyEncrypt(username, salt, user.UserName);
 
-                var hasEqualPassword = string.Equals(encryptedPassword, user.Password);
+                var hasEqualPassword = string.Equals(encryptedPassword, user.PasswordHash);
                 if (hasEqualUsername & hasEqualPassword)
                     return user;
             }

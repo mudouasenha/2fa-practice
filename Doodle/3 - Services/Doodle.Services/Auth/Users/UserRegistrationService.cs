@@ -33,6 +33,7 @@ namespace Doodle.Services.Auth.Users
 
             await _userManager.SetUserNameAsync(user, input.Username);
             await _userManager.SetEmailAsync(user, input.Email);
+            user.CreatedAt = DateTime.Now;
 
             var result = await _userManager.CreateAsync(user, input.Password);
 

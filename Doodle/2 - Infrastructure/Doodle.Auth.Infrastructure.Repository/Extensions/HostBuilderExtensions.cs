@@ -1,13 +1,10 @@
 ﻿using Doodle.Auth.Infrastructure.Repository.Data.Contexts;
-using Doodle.Auth.Infrastructure.Repository.Data.Seeds;
-using Doodle.Auth.Infrastructure.Repository.Options;
 using Doodle.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace Doodle.Auth.Infrastructure.Repository.Extensions
@@ -20,15 +17,13 @@ namespace Doodle.Auth.Infrastructure.Repository.Extensions
             await host.RunAsync();
         }
 
-        public static IHost RunMigrations<TContext>(this IHost host) where TContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+        public static IHost RunMigrations<TContext>(this IHost host) where TContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
         {
             try
             {
                 using var scope = host.Services.CreateScope();
                 var services = scope.ServiceProvider;
                 var dbContext = services.GetRequiredService<TContext>();
-                var seedOptions = services.GetRequiredService<IOptions<SeedOptions>>();
-                UserIdentitySeed.Seed(dbContext, seedOptions.Value.Password);
                 dbContext.Database.Migrate();
 
                 return host;

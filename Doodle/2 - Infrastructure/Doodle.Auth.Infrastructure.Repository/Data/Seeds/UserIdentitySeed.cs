@@ -1,49 +1,51 @@
 ﻿using Doodle.Domain.Constants;
 using Doodle.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Doodle.Auth.Infrastructure.Repository.Data.Seeds
 {
     public static class UserIdentitySeed
     {
-        public static void Seed<TContext>(TContext context, string password) where TContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+        public static ModelBuilder SeedApplicationUsers(this ModelBuilder builder, string password)
         {
-            context.Database.EnsureCreated();
-            CreateUserAsync(context, "admin@admin.com", password, RoleConstants.Admin).GetAwaiter().GetResult();
-            CreateUserAsync(context, "reader@reader.com", password, RoleConstants.Reader).GetAwaiter().GetResult();
-            context.SaveChanges();
+            CreateUserAsync(builder, 1, "Administrator", "admin", "admin@admin.com", password, new List<(int, string)> { (1, RoleConstants.Admin), (2, RoleConstants.Reader) });
+            CreateUserAsync(builder, 2, "Reader", "reader", "reader@reader.com", password, new List<(int, string)> { (2, RoleConstants.Reader) });
+
+            return builder;
         }
 
-        public static async Task CreateUserAsync<TContext>(TContext context, string email, string password, string role) where TContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+        public static ModelBuilder CreateUserAsync(this ModelBuilder builder, int id, string name, string userName, string email, string password, List<(int roleId, string roleName)> roles)
         {
             var user = new ApplicationUser()
             {
-                UserName = email,
-                NormalizedUserName = email,
+                Name = name,
+                UserName = userName,
+                PhoneNumber = "+5599999999999",
+                NormalizedUserName = userName,
                 Email = email,
                 NormalizedEmail = email,
                 EmailConfirmed = true,
                 LockoutEnabled = false,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
+                Id = id,
+                CreatedAt = DateTime.Now
             };
 
-            var roleStore = new RoleStore<IdentityRole>(context);
+            PasswordHasher<ApplicationUser> hasher = new();
 
-            if (!context.Roles.Any(r => r.Name == role))
+            user.PasswordHash = hasher.HashPassword(user, password);
+
+            builder.Entity<ApplicationUser>().HasData(user);
+
+            foreach (var role in roles)
             {
-                await roleStore.CreateAsync(new IdentityRole { Name = role, NormalizedName = role });
+                builder.Entity<IdentityUserRole<int>>().HasData(
+                    new IdentityUserRole<int> { RoleId = role.roleId, UserId = user.Id }
+                );
             }
 
-            if (!context.Users.Any(u => u.UserName == user.UserName))
-            {
-                var passwordHasher = new PasswordHasher<ApplicationUser>();
-                var hashed = passwordHasher.HashPassword(user, password);
-                user.PasswordHash = hashed;
-                var userStore = new UserStore<ApplicationUser, IdentityRole<Guid>, TContext, Guid>(context);
-                await userStore.CreateAsync(user);
-                await userStore.AddToRoleAsync(user, role);
-            }
+            return builder;
         }
     }
 }

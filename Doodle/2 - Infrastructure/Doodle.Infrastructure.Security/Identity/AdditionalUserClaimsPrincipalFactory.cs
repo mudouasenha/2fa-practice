@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
-namespace Doodle.Infrastructure.Security.Extensions
+namespace Doodle.Infrastructure.Security.Identity
 {
     public class AdditionalUserClaimsPrincipalFactory :
-        UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>
+        UserClaimsPrincipalFactory<ApplicationUser, IdentityRole<int>>
     {
         public AdditionalUserClaimsPrincipalFactory(
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<IdentityRole<int>> roleManager,
             IOptions<IdentityOptions> optionsAccessor)
             : base(userManager, roleManager, optionsAccessor)
         {

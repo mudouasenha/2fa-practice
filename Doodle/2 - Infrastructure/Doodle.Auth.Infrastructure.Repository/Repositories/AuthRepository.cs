@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Doodle.Auth.Infrastructure.Repository.Repositories
 {
-    public class AuthRepository<TEntity> : IAuthRepository<TEntity> where TEntity : IdentityUser<Guid>
+    public class AuthRepository<TEntity> : IAuthRepository<TEntity> where TEntity : IdentityUser<int>
     {
         protected readonly DoodleAuthDbContext dbContext;
         protected readonly DbSet<TEntity> dbSet;
